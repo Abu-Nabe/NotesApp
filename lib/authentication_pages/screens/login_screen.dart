@@ -1,8 +1,16 @@
+import 'dart:ffi';
+
+import 'package:aag_group_services/authentication_pages/login_controller.dart';
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-Widget build_login_screen(BuildContext context) {
+import '../../consts/strings/authentication_strings/authentication_strings.dart';
+import '../../firebase/phone_verification.dart';
+
+Widget build_login_screen(BuildContext context, FirebaseAuth auth) {
   final size = MediaQuery.of(context).size;
 
   return Scaffold(
@@ -13,14 +21,16 @@ Widget build_login_screen(BuildContext context) {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0), // Add padding around the container
-          child: build_login_container(context), // Call the container here
+          child: build_login_container(context, auth), // Call the container here
         ),
       ),
     ),
   );
 }
 
-Widget build_login_container(BuildContext context) {
+Widget build_login_container(BuildContext context, FirebaseAuth auth) {
+  Map<String, dynamic> authDetails = LoginControllerState.authenticationMap.value;
+
   return Align(
     alignment: Alignment.center, // Center the container horizontally
     child: Container(
@@ -32,16 +42,38 @@ Widget build_login_container(BuildContext context) {
           color: ShadesOfGrey.grey2, // Border color
           width: 2.0, // Border width
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5), // Color of the shadow
+            spreadRadius: 2, // Spread radius of the shadow
+            blurRadius: 5, // Blur radius of the shadow
+            offset: const Offset(0, 3), // Changes the position of the shadow
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
         crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
         children: [
           loginLabel(),
-          const SizedBox(height: 20), // Space between the title and the input field
+          authDetails[type] != null && authDetails[type].exists
+              ? SizedBox(height: 30)
+              : SizedBox(height: 20),
           loginPhoneField(),
           const SizedBox(height: 20),
-          buildLoginButton(),
+          !LoginControllerState.loginToggled.value
+          ? loginCodeField()
+          : SizedBox.shrink(),
+          !LoginControllerState.loginToggled.value
+          ? const SizedBox(height: 20)
+          : SizedBox.shrink(),
+          buildLoginButton(auth, authDetails),
+          authDetails[type] != null && authDetails[type].exists
+              ? SizedBox(height: 30)
+              : SizedBox.shrink(),
+          authDetails[type] != null && authDetails[type].exists
+          ? errorLabel(auth, authDetails)
+          : SizedBox.shrink(),
         ],
       ),
     ),
@@ -59,10 +91,45 @@ Widget loginLabel(){
   );
 }
 
-Widget loginPhoneField(){
+Widget loginPhoneField() {
+  return InternationalPhoneNumberInput(
+    onInputChanged: (PhoneNumber number) {
+      print(number.phoneNumber); // Handle phone number input change
+    },
+    selectorConfig: SelectorConfig(
+      selectorType: PhoneInputSelectorType.DROPDOWN,
+    ),
+    ignoreBlank: false,
+    autoValidateMode: AutovalidateMode.disabled,
+    selectorTextStyle: const TextStyle(color: Colors.black),
+    textFieldController: TextEditingController(),
+    formatInput: false,
+    keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+    inputDecoration: InputDecoration(
+      labelText: "Enter Phone Number",
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2,
+          width: 2.0,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2, // Border color for the enabled state
+          width: 2.0,
+        ),
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0), // Adjust padding
+    ),
+  );
+}
+
+Widget loginCodeField(){
   return TextField(
     decoration: InputDecoration(
-      labelText: "Enter Phone Number", // Label for the input field
+      labelText: "Enter Verification Code", // Label for the input field
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0), // Add circular border radius
         borderSide: BorderSide(
@@ -89,10 +156,17 @@ Widget loginPhoneField(){
   );
 }
 
-Widget buildLoginButton() {
+Widget buildLoginButton(FirebaseAuth auth, Map<String, dynamic> authDetails) {
   return ElevatedButton(
-    onPressed: () {
-      // Handle button press
+    onPressed: () async {
+      String phoneString = authDetails[numberString];
+      Map<String, dynamic> resultsMap = await verifyPhoneNumber(auth, phoneString);
+
+      if(resultsMap[result]){
+        LoginControllerState.loginToggled.value = true;
+      }else{
+        // error
+      }
     },
     style: ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 32.0),
@@ -110,7 +184,33 @@ Widget buildLoginButton() {
       style: TextStyle(
         fontSize: 16,
         color: Colors.white, // Set text color
+        fontWeight: FontWeight.bold
       ),
     ),
   );
+}
+
+Widget errorLabel(FirebaseAuth auth, Map<String, dynamic> authDetails){
+  String errorText = "Error: invalid phone number";
+  Color errorColor = ShadesOfRed.red5;
+  if(authDetails[type] == 1){
+    errorText = "Resend verification code";
+    errorColor = ShadesOfGrey.grey4;
+  }
+  return InkWell(
+    onTap: () {
+      if(authDetails[type] == 2){
+
+      }
+    },
+    child: Text(
+      errorText,
+      style: TextStyle(
+        fontSize: 14,
+        color: errorColor, // Set text color
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+
 }
