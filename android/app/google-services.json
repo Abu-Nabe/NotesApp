@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1012015427209",
+    "project_id": "aaglobalgroup-68580",
+    "storage_bucket": "aaglobalgroup-68580.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012015427209:android:37e775050c1eb9e51ee058",
+        "android_client_info": {
+          "package_name": "com.example.aag_group_services"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMaj_NCjCQrZipVIlD7nZoqgXH1OFAzl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
