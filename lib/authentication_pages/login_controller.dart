@@ -1,14 +1,14 @@
 import 'package:aag_group_services/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class LoginController extends StatefulWidget {
+  const LoginController({super.key});
 
   @override
-  State<ChatPage> createState() => ChatPageState();
+  State<LoginController> createState() => LoginControllerState();
 }
 
-class ChatPageState extends State<ChatPage> {
+class LoginControllerState extends State<ChatPage> {
   // Any logic or state specific to Contacts Page
 
   @override

@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.aag_group_services"
-        minSdkVersion 21 // Updated from 19 to 21
-        targetSdkVersion 33 // Consider updating to the latest version
+        minSdkVersion 23 // Updated from 19 to 21
+        targetSdkVersion 34 // Consider updating to the latest version
         versionCode 1
         versionName "1.0"
     }

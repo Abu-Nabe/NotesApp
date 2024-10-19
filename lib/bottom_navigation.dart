@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'controllers/chat.dart';
-import 'controllers/contact.dart';
-import 'controllers/settings.dart';
+import 'main_pages/controllers/contact.dart';
+import 'main_pages/controllers/chat.dart';
+import 'main_pages/controllers/settings.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
