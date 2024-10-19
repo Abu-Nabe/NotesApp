@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'bottom_navigation.dart';
 import 'firebase/firebase_options.dart';
 import 'firebase/authenticated_state.dart';
 
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const BottomNavigation(),
+      home: const AuthWrapper(),
     );
   }
 }
