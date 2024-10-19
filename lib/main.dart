@@ -8,14 +8,6 @@ import 'firebase_options.dart';
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
 
-  // Check if a specific variable is loaded correctly
-  String? apiKey = dotenv.env['FIREBASE_API_KEY_ANDROID'];
-  if (apiKey != null && apiKey.isNotEmpty) {
-    print('API Key Loaded: $apiKey');
-  } else {
-    print('API Key not found or empty');
-  }
-
   WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter is initialized
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // Initialize Firebase
