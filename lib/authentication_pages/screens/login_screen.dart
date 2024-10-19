@@ -54,6 +54,7 @@ Widget loginLabel(){
     style: TextStyle(
       fontSize: 18, // Font size for the title
       fontWeight: FontWeight.bold, // Bold text for the title
+      color: ShadesOfBlack.black2,
     ),
   );
 }
@@ -94,6 +95,7 @@ Widget buildLoginButton() {
       // Handle button press
     },
     style: ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 32.0),
       backgroundColor: ShadesOfPurple.purple3, // Set background color
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0), // Match button with container radius
@@ -104,7 +106,7 @@ Widget buildLoginButton() {
       ),
     ),
     child: const Text(
-      "Login",
+      "Continue",
       style: TextStyle(
         fontSize: 16,
         color: Colors.white, // Set text color
