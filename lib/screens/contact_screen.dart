@@ -76,11 +76,11 @@ Widget listContainer() {
       child: ListView(
         children: [
           buildItemContainer("Abu"),
-          Divider(color: ShadesOfGrey.grey3, height: 1), // Divider indicating next item
+          Divider(color: ShadesOfGrey.grey1, height: 1), // Divider indicating next item
           buildItemContainer("Sara"),
-          Divider(color: ShadesOfGrey.grey3, height: 1),
+          Divider(color: ShadesOfGrey.grey1, height: 1),
           buildItemContainer("Ali"),
-          Divider(color: ShadesOfGrey.grey3, height: 1),
+          Divider(color: ShadesOfGrey.grey1, height: 1),
           // Add more items as needed
         ],
       ),
