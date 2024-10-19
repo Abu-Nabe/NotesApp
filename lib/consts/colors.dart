@@ -23,3 +23,59 @@ class ShadesOfGrey {
   static const Color grey4 = Color(0xFF808080); // Medium grey
   static const Color grey5 = Color(0xFF404040); // Dark grey
 }
+
+class ShadesOfRed {
+  static const Color red1 = Color(0xFFFFE5E5); // Very light red
+  static const Color red2 = Color(0xFFFF9999); // Light red
+  static const Color red3 = Color(0xFFFF4D4D); // Bright red
+  static const Color red4 = Color(0xFFFF1A1A); // Dark red
+  static const Color red5 = Color(0xFFB30000); // Very dark red
+}
+
+class ShadesOfYellow {
+  static const Color yellow1 = Color(0xFFFFF9E5); // Very light yellow
+  static const Color yellow2 = Color(0xFFFFE999); // Light yellow
+  static const Color yellow3 = Color(0xFFFFD633); // Bright yellow
+  static const Color yellow4 = Color(0xFFFFB800); // Dark yellow
+  static const Color yellow5 = Color(0xFFB38600); // Very dark yellow
+}
+
+class ShadesOfGreen {
+  static const Color green1 = Color(0xFFE5FFE5); // Very light green
+  static const Color green2 = Color(0xFF99FF99); // Light green
+  static const Color green3 = Color(0xFF33CC33); // Bright green
+  static const Color green4 = Color(0xFF248F24); // Dark green
+  static const Color green5 = Color(0xFF005200); // Very dark green
+}
+
+class ShadesOfBlue {
+  static const Color blue1 = Color(0xFFE5F2FF); // Very light blue
+  static const Color blue2 = Color(0xFF99CCFF); // Light blue
+  static const Color blue3 = Color(0xFF4DA6FF); // Bright blue
+  static const Color blue4 = Color(0xFF0066CC); // Dark blue
+  static const Color blue5 = Color(0xFF003366); // Very dark blue
+}
+
+class ShadesOfPurple {
+  static const Color purple1 = Color(0xFFF2E5FF); // Very light purple
+  static const Color purple2 = Color(0xFFCC99FF); // Light purple
+  static const Color purple3 = Color(0xFFB266FF); // Bright purple
+  static const Color purple4 = Color(0xFF7F00FF); // Dark purple
+  static const Color purple5 = Color(0xFF4B0082); // Very dark purple
+}
+
+class ShadesOfOrange {
+  static const Color orange1 = Color(0xFFFFF2E5); // Very light orange
+  static const Color orange2 = Color(0xFFFFCC99); // Light orange
+  static const Color orange3 = Color(0xFFFF9933); // Bright orange
+  static const Color orange4 = Color(0xFFCC6600); // Dark orange
+  static const Color orange5 = Color(0xFF663300); // Very dark orange
+}
+
+class ShadesOfPink {
+  static const Color pink1 = Color(0xFFFFE5F2); // Very light pink
+  static const Color pink2 = Color(0xFFFF99CC); // Light pink
+  static const Color pink3 = Color(0xFFFF66B2); // Bright pink
+  static const Color pink4 = Color(0xFFFF3399); // Dark pink
+  static const Color pink5 = Color(0xFFCC0066); // Very dark pink
+}
