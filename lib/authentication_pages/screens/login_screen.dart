@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../consts/strings/authentication_strings/authentication_strings.dart';
+import '../../extension/phone_number_simplifier.dart';
 import '../../firebase/phone_verification.dart';
 
 Widget build_login_screen(BuildContext context, FirebaseAuth auth) {
@@ -59,12 +60,12 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
           authDetails[type] != null && authDetails[type].exists
               ? SizedBox(height: 30)
               : SizedBox(height: 20),
-          loginPhoneField(),
+          loginPhoneField(authDetails),
           const SizedBox(height: 20),
-          !LoginControllerState.loginToggled.value
+          LoginControllerState.loginToggled.value
           ? loginCodeField()
           : SizedBox.shrink(),
-          !LoginControllerState.loginToggled.value
+          LoginControllerState.loginToggled.value
           ? const SizedBox(height: 20)
           : SizedBox.shrink(),
           buildLoginButton(auth, authDetails),
@@ -91,10 +92,12 @@ Widget loginLabel(){
   );
 }
 
-Widget loginPhoneField() {
+Widget loginPhoneField(Map<String, dynamic> authDetails) {
   return InternationalPhoneNumberInput(
     onInputChanged: (PhoneNumber number) {
-      print(number.phoneNumber); // Handle phone number input change
+      String verifyNumber = '${number.phoneNumber}';
+
+      authDetails[numberString] = simplifyPhoneNumber(verifyNumber);
     },
     selectorConfig: SelectorConfig(
       selectorType: PhoneInputSelectorType.DROPDOWN,
@@ -123,6 +126,36 @@ Widget loginPhoneField() {
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0), // Adjust padding
     ),
+  );
+}
+
+Widget loginField(Map<String, dynamic> authDetails, String type){
+  return TextField(
+    decoration: InputDecoration(
+      labelText: "Enter Verification Code", // Label for the input field
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0), // Add circular border radius
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2, // Border color
+          width: 2.0, // Border width
+        ),
+      ), // Add a border to the input field
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2, // Border color for the enabled state
+          width: 2.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfPurple.purple2, // Border color when focused
+          width: 2.0,
+        ),
+      ),
+    ),
+    keyboardType: TextInputType.phone, // Keyboard type for phone input
   );
 }
 
@@ -160,7 +193,13 @@ Widget buildLoginButton(FirebaseAuth auth, Map<String, dynamic> authDetails) {
   return ElevatedButton(
     onPressed: () async {
       String phoneString = authDetails[numberString];
+      print(phoneString);
       Map<String, dynamic> resultsMap = await verifyPhoneNumber(auth, phoneString);
+      resultsMap.forEach((key, newValue) {
+        if (LoginControllerState.authenticationMap.value.containsKey(key)) {
+          LoginControllerState.authenticationMap.value[key] = newValue; // Update the value if key exists
+        }
+      });
 
       if(resultsMap[result]){
         LoginControllerState.loginToggled.value = true;
