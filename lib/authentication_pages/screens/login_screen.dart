@@ -272,7 +272,7 @@ Widget registerLabel(FirebaseAuth auth){
 
   return InkWell(
     onTap: () {
-
+        LoginControllerState.screenUpdate.value = 2;
     },
     child: Text(
       errorText,
