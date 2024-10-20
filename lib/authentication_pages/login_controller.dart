@@ -1,6 +1,8 @@
 import 'package:aag_group_services/authentication_pages/screens/login_screen.dart';
 import 'package:aag_group_services/authentication_pages/screens/register_screen.dart';
+import 'package:aag_group_services/firebase/initialize_ref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class LoginController extends StatefulWidget {
@@ -17,6 +19,24 @@ class LoginControllerState extends State<LoginController> {
   static ValueNotifier<Map<String, dynamic>> authenticationMap = ValueNotifier<Map<String, dynamic>>({});
   static ValueNotifier<int> screenUpdate = ValueNotifier<int>(1);
 
+  Future<void> addData() async {
+    print("addData function called"); // Debug log
+    try {
+      final DatabaseReference _database = await setUpFirebaseRef();
+      print("Database reference obtained: $_database"); // Debug log
+
+      await _database.child('users/userId').set({
+        'name': 'John Doe',
+        'email': 'johndoe@example.com',
+      });
+
+      print('Data added successfully.');
+    } catch (e) {
+      print('Error adding data: $e'); // Print any error message
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +44,7 @@ class LoginControllerState extends State<LoginController> {
     authenticationMap.addListener(updateValue);
     screenUpdate.addListener(updateValue);
 
+    addData();
   }
 
   void updateValue(){
