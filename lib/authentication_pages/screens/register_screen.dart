@@ -1,15 +1,12 @@
-import 'dart:ffi';
-
 import 'package:aag_group_services/authentication_pages/login_controller.dart';
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../bottom_navigation.dart';
 import '../../consts/strings/authentication_strings/authentication_strings.dart';
-import '../../extension/phone_number_simplifier.dart';
-import '../../firebase/phone_verification.dart';
+import '../../firebase/create_account.dart';
 import '../functions/register_type.dart';
 
 Widget build_register_screen(BuildContext context, FirebaseAuth auth) {
@@ -62,31 +59,34 @@ Widget build_container(BuildContext context, FirebaseAuth auth) {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
-        crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
-        children: [
-          containerLabel(),
-          SizedBox(height: 20),
-          inputField(authDetails, registerEmail),
-          const SizedBox(height: 20),
-          inputField(authDetails, registerPassword),
-          const SizedBox(height: 20),
-          inputField(authDetails, registerFirstName),
-          const SizedBox(height: 20),
-          inputField(authDetails, registerLastName),
-          const SizedBox(height: 20),
-          buildRegisterButton(auth, authDetails),
-          if (authDetails[registerError] != null && authDetails[registerError].isNotEmpty)
-            ...[
-              const SizedBox(height: 10),
-              errorLabel(authDetails[registerError]),
-            ],
-        ],
+      child: SingleChildScrollView( // Make the container scrollable
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
+          crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
+          children: [
+            containerLabel(),
+            SizedBox(height: 20),
+            inputField(authDetails, registerEmail),
+            const SizedBox(height: 20),
+            inputPasswordField(authDetails, registerPassword),
+            const SizedBox(height: 20),
+            inputField(authDetails, registerFirstName),
+            const SizedBox(height: 20),
+            inputField(authDetails, registerLastName),
+            const SizedBox(height: 20),
+            buildRegisterButton(context,auth, authDetails),
+            if (authDetails[registerError] != null && authDetails[registerError].isNotEmpty)
+              ...[
+                const SizedBox(height: 20),
+                errorLabel(authDetails[registerError]),
+              ],
+          ],
+        ),
       ),
     ),
   );
 }
+
 
 Widget containerLabel(){
   return Text(
@@ -133,32 +133,55 @@ Widget inputField(Map<String, dynamic> authDetails, String type){
   );
 }
 
-Widget buildRegisterButton(FirebaseAuth auth, Map<String, dynamic> authDetails) {
+Widget inputPasswordField(Map<String, dynamic> authDetails, String type) {
+  String text = checkType(type);
+
+  return TextField(
+    obscureText: true, // Set this to true to hide password characters
+    decoration: InputDecoration(
+      labelText: text, // Label for the input field
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0), // Add circular border radius
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2, // Border color
+          width: 2.0, // Border width
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfGrey.grey2, // Border color for the enabled state
+          width: 2.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: BorderSide(
+          color: ShadesOfPurple.purple2, // Border color when focused
+          width: 2.0,
+        ),
+      ),
+    ),
+    onChanged: (value) {
+      authDetails[type] = value; // Update authDetails with the input value
+    },
+  );
+}
+
+
+Widget buildRegisterButton(BuildContext context,FirebaseAuth auth, Map<String, dynamic> authDetails) {
   return ElevatedButton(
     onPressed: () async {
-      String email = authDetails[registerEmail]; // Assuming registerEmail is defined in your authDetails
-      String password = authDetails[registerPassword]; // Assuming registerPassword is defined in your authDetails
+      if(inputType(authDetails)){
+        UserCredential? userCredential = await createAnAccount(auth, authDetails);
+        if (userCredential != null) {
+          String userId = userCredential.user?.uid ?? '';
+          bool isSuccessful = await addAccountToDb(userId, authDetails);
 
-      try {
-        // Create a new user with email and password
-        UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        // User successfully registered
-        // You can navigate to the next screen or show a success message
-      } on FirebaseAuthException catch (e) {
-        // Handle errors here
-        if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
-        } else {
-          print('Error: ${e.message}');
+          if (isSuccessful) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+          }
         }
-      } catch (e) {
-        print('Error: ${e.toString()}');
       }
     },
     style: ElevatedButton.styleFrom(

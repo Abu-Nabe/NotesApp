@@ -52,22 +52,24 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
-        crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
-        children: [
-          loginLabel(),
-          SizedBox(height: 20),
-          loginField(authDetails, "email"),
-          const SizedBox(height: 20),
-          loginField(authDetails, "password"),
-          const SizedBox(height: 10),
-          buildSpaceBetweenContainer(auth ,authDetails),
-          const SizedBox(height: 10),
-          buildLoginButton(auth, authDetails),
-          const SizedBox(height: 20),
-          registerLabel(auth),
-        ],
+      child: SingleChildScrollView( // Make the container scrollable
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
+          crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
+          children: [
+            loginLabel(),
+            SizedBox(height: 20),
+            loginField(authDetails, "email"),
+            const SizedBox(height: 20),
+            loginField(authDetails, "password"),
+            const SizedBox(height: 10),
+            buildSpaceBetweenContainer(auth, authDetails),
+            const SizedBox(height: 10),
+            buildLoginButton(auth, authDetails),
+            const SizedBox(height: 20),
+            registerLabel(auth),
+          ],
+        ),
       ),
     ),
   );
@@ -123,11 +125,13 @@ Widget loginPhoneField(Map<String, dynamic> authDetails) {
 
 Widget loginField(Map<String, dynamic> authDetails, String type){
   String text = "Enter email";
-
+  bool obscure = false;
   if(type == "password"){
     text = "Enter password";
+    obscure = true;
   }
   return TextField(
+    obscureText: obscure,
     decoration: InputDecoration(
       labelText: text, // Label for the input field
       border: OutlineInputBorder(
