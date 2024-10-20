@@ -57,24 +57,16 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
         crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
         children: [
           loginLabel(),
-          authDetails[type] != null && authDetails[type].exists
-              ? SizedBox(height: 30)
-              : SizedBox(height: 20),
-          loginPhoneField(authDetails),
+          SizedBox(height: 20),
+          loginField(authDetails, "email"),
           const SizedBox(height: 20),
-          LoginControllerState.loginToggled.value
-          ? loginCodeField()
-          : SizedBox.shrink(),
-          LoginControllerState.loginToggled.value
-          ? const SizedBox(height: 20)
-          : SizedBox.shrink(),
+          loginField(authDetails, "password"),
+          const SizedBox(height: 10),
+          buildSpaceBetweenContainer(auth ,authDetails),
+          const SizedBox(height: 10),
           buildLoginButton(auth, authDetails),
-          authDetails[type] != null && authDetails[type].exists
-              ? SizedBox(height: 30)
-              : SizedBox.shrink(),
-          authDetails[type] != null && authDetails[type].exists
-          ? errorLabel(auth, authDetails)
-          : SizedBox.shrink(),
+          const SizedBox(height: 20),
+          registerLabel(auth),
         ],
       ),
     ),
@@ -130,9 +122,14 @@ Widget loginPhoneField(Map<String, dynamic> authDetails) {
 }
 
 Widget loginField(Map<String, dynamic> authDetails, String type){
+  String text = "Enter email";
+
+  if(type == "password"){
+    text = "Enter password";
+  }
   return TextField(
     decoration: InputDecoration(
-      labelText: "Enter Verification Code", // Label for the input field
+      labelText: text, // Label for the input field
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0), // Add circular border radius
         borderSide: BorderSide(
@@ -155,7 +152,6 @@ Widget loginField(Map<String, dynamic> authDetails, String type){
         ),
       ),
     ),
-    keyboardType: TextInputType.phone, // Keyboard type for phone input
   );
 }
 
@@ -229,18 +225,54 @@ Widget buildLoginButton(FirebaseAuth auth, Map<String, dynamic> authDetails) {
   );
 }
 
-Widget errorLabel(FirebaseAuth auth, Map<String, dynamic> authDetails){
-  String errorText = "Error: invalid phone number";
+Widget errorLabel(FirebaseAuth auth, Map<String, dynamic> authDetails, String errorText){
   Color errorColor = ShadesOfRed.red5;
-  if(authDetails[type] == 1){
-    errorText = "Resend verification code";
-    errorColor = ShadesOfGrey.grey4;
-  }
+
   return InkWell(
     onTap: () {
-      if(authDetails[type] == 2){
 
-      }
+    },
+    child: Text(
+      errorText,
+      style: TextStyle(
+        fontSize: 13,
+        color: errorColor, // Set text color
+        fontWeight: FontWeight.bold,
+      ),
+      overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
+      maxLines: 1, // Ensure that it stays on one line
+    ),
+  );
+}
+
+Widget forgotLabel(FirebaseAuth auth){
+  String errorText = "Forgot Password?";
+  Color errorColor = ShadesOfGrey.grey4;
+
+  return InkWell(
+    onTap: () {
+
+    },
+    child: Text(
+      errorText,
+      style: TextStyle(
+        fontSize: 13,
+        color: errorColor, // Set text color
+        fontWeight: FontWeight.bold,
+      ),
+      overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
+      maxLines: 1, // Ensure that it stays on one line
+    ),
+  );
+}
+
+Widget registerLabel(FirebaseAuth auth){
+  String errorText = "Register";
+  Color errorColor = ShadesOfPurple.purple4;
+
+  return InkWell(
+    onTap: () {
+
     },
     child: Text(
       errorText,
@@ -249,7 +281,36 @@ Widget errorLabel(FirebaseAuth auth, Map<String, dynamic> authDetails){
         color: errorColor, // Set text color
         fontWeight: FontWeight.bold,
       ),
+      overflow: TextOverflow.ellipsis, // Add ellipsis when text overflows
+      maxLines: 1, // Ensure that it stays on one line
     ),
   );
+}
 
+Widget buildSpaceBetweenContainer(FirebaseAuth auth, Map<String, dynamic> authDetails) {
+  String errorString = "";
+  if (authDetails[type] != null && authDetails[type].exists) {
+    errorString = "Error: invalid user credentials";
+  }
+
+  return Container(
+    child: Row(
+      children: [
+        // Align errorLabel to the left
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: errorLabel(auth, authDetails, errorString),
+          ),
+        ),
+        // Align registerLabel to the right
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: forgotLabel(auth),
+          ),
+        ),
+      ],
+    ),
+  );
 }
