@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../firebase/sign_out.dart';
 import '../screens/settings_screen.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -9,7 +10,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  // Any logic or state specific to Contacts Page
+  // Any logic or state specific to Settings Page
+
+  @override
+  void initState() {
+    super.initState();
+    signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
