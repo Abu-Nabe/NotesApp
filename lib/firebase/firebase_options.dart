@@ -3,18 +3,9 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -41,7 +32,7 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions web = FirebaseOptions(
+  static final FirebaseOptions web = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_WEB'] ?? '',
     appId: dotenv.env['FIREBASE_APP_ID_WEB'] ?? '',
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
@@ -51,7 +42,7 @@ class DefaultFirebaseOptions {
     measurementId: dotenv.env['FIREBASE_MEASUREMENT_ID'] ?? '',
   );
 
-  static FirebaseOptions android = FirebaseOptions(
+  static final FirebaseOptions android = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_ANDROID'] ?? '',
     appId: dotenv.env['FIREBASE_APP_ID_ANDROID'] ?? '',
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
@@ -59,7 +50,7 @@ class DefaultFirebaseOptions {
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
   );
 
-  static FirebaseOptions ios = FirebaseOptions(
+  static final FirebaseOptions ios = FirebaseOptions(
     apiKey: dotenv.env['FIREBASE_API_KEY_IOS'] ?? '',
     appId: dotenv.env['FIREBASE_APP_ID_IOS'] ?? '',
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
@@ -68,18 +59,18 @@ class DefaultFirebaseOptions {
     iosBundleId: dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? '',
   );
 
-  static FirebaseOptions macos = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_MACOS'] ?? '',
-    appId: dotenv.env['FIREBASE_APP_ID_MACOS'] ?? '',
+  static final FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_IOS'] ?? '',
+    appId: dotenv.env['FIREBASE_APP_ID_IOS'] ?? '',
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
     projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
     storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '',
     iosBundleId: dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? '',
   );
 
-  static FirebaseOptions windows = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_WINDOWS'] ?? '',
-    appId: dotenv.env['FIREBASE_APP_ID_WINDOWS'] ?? '',
+  static final FirebaseOptions windows = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY_WEB'] ?? '',
+    appId: dotenv.env['FIREBASE_APP_ID_WEB'] ?? '',
     messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '',
     projectId: dotenv.env['FIREBASE_PROJECT_ID'] ?? '',
     authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN'] ?? '',

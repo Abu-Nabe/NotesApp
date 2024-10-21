@@ -20,21 +20,29 @@ class LoginControllerState extends State<LoginController> {
   static ValueNotifier<int> screenUpdate = ValueNotifier<int>(1);
 
   Future<void> addData() async {
-    print("addData function called"); // Debug log
-    try {
-      final DatabaseReference _database = await setUpFirebaseRef();
-      print("Database reference obtained: $_database"); // Debug log
-
-      await _database.child('users/userId').set({
-        'name': 'John Doe',
-        'email': 'johndoe@example.com',
-      });
-
-      print('Data added successfully.');
-    } catch (e) {
-      print('Error adding data: $e'); // Print any error message
-    }
+    FirebaseDatabase.instance
+        .ref()
+        .child('users/email')  // Use .child() instead of .ref()
+    .push()
+        .set({
+      "name": "John",
+      "age": 18,
+      "address": {
+        "line1": "100 Mountain View"
+      }
+    })
+        .then((_) {
+      // Data saved successfully!
+      print("Data saved successfully.");
+    })
+        .catchError((error) {
+      // The write failed...
+      print("Error updating data: ${error.toString()}");
+    });
   }
+
+
+
 
 
   @override
