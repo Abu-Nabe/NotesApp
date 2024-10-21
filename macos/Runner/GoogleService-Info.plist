@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAqh9NvRfgnugU0McK7JCMgrhhL0K3nk4I</string>
+	<string>AIzaSyBW1uAEEmnrfGZxP3XJQQFopA3hF016Dp8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1012015427209</string>
+	<string>190344918636</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.aagGroupServices</string>
 	<key>PROJECT_ID</key>
-	<string>aaglobalgroup-68580</string>
+	<string>aaglobalgroup-3ffdc</string>
 	<key>STORAGE_BUCKET</key>
-	<string>aaglobalgroup-68580.appspot.com</string>
+	<string>aaglobalgroup-3ffdc.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1012015427209:ios:fd14a1660d1cc5781ee058</string>
+	<string>1:190344918636:ios:e5d7af11278ec67b1dca49</string>
 </dict>
 </plist>
