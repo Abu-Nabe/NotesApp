@@ -32,7 +32,7 @@ Future<UserCredential?> createAnAccount(FirebaseAuth auth, Map<String, dynamic> 
 Future<bool> addAccountToDb(String userId, Map<String, dynamic> authDetails) async {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
 
-  String fullname = '${authDetails['registerFirstName']} ${authDetails['registerLastName']}';
+  String fullname = '${authDetails[registerFirstName]} ${authDetails[registerLastName]}';
   try {
     await _database.child('users/$userId').set({
       'name': fullname,

@@ -15,14 +15,19 @@ Widget build_login_screen(BuildContext context, FirebaseAuth auth) {
   final size = MediaQuery.of(context).size;
 
   return Scaffold(
-    body: Container(
-      width: size.width, // Full width
-      height: size.height, // Full height
-      color: ShadesOfGrey.grey2,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0), // Add padding around the container
-          child: build_login_container(context, auth), // Call the container here
+    body: GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        width: size.width, // Full width
+        height: size.height, // Full height
+        color: ShadesOfGrey.grey2,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0), // Add padding around the container
+            child: build_login_container(context, auth), // Call the container here
+          ),
         ),
       ),
     ),

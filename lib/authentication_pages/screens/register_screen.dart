@@ -22,14 +22,20 @@ Widget build_register_screen(BuildContext context, FirebaseAuth auth) {
       ),
       backgroundColor: ShadesOfGrey.grey2, // Set a background color for the AppBar
     ),
-    body: Container(
-      width: size.width, // Full width
-      height: size.height, // Full height
-      color: ShadesOfGrey.grey2,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0), // Add padding around the container
-          child: build_container(context, auth), // Call the container here
+    body: GestureDetector(
+      onTap: () {
+        // Unfocus any currently focused text field
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        width: size.width, // Full width
+        height: size.height, // Full height
+        color: ShadesOfGrey.grey2,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0), // Add padding around the container
+            child: build_container(context, auth), // Call the container here
+          ),
         ),
       ),
     ),

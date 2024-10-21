@@ -19,32 +19,6 @@ class LoginControllerState extends State<LoginController> {
   static ValueNotifier<Map<String, dynamic>> authenticationMap = ValueNotifier<Map<String, dynamic>>({});
   static ValueNotifier<int> screenUpdate = ValueNotifier<int>(1);
 
-  Future<void> addData() async {
-    FirebaseDatabase.instance
-        .ref()
-        .child('users/email')  // Use .child() instead of .ref()
-    .push()
-        .set({
-      "name": "John",
-      "age": 18,
-      "address": {
-        "line1": "100 Mountain View"
-      }
-    })
-        .then((_) {
-      // Data saved successfully!
-      print("Data saved successfully.");
-    })
-        .catchError((error) {
-      // The write failed...
-      print("Error updating data: ${error.toString()}");
-    });
-  }
-
-
-
-
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +26,6 @@ class LoginControllerState extends State<LoginController> {
     authenticationMap.addListener(updateValue);
     screenUpdate.addListener(updateValue);
 
-    addData();
   }
 
   void updateValue(){
