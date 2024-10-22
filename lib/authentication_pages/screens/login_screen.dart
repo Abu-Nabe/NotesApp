@@ -7,8 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../bottom_navigation.dart';
 import '../../consts/strings/authentication_strings/authentication_strings.dart';
 import '../../extension/phone_number_simplifier.dart';
+import '../../firebase/create_account.dart';
 import '../../firebase/phone_verification.dart';
 
 Widget build_login_screen(BuildContext context, FirebaseAuth auth) {
@@ -64,13 +66,13 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
           children: [
             loginLabel(),
             SizedBox(height: 20),
-            loginField(authDetails, "email"),
+            loginField(authDetails, loginEmail),
             const SizedBox(height: 20),
-            loginField(authDetails, "password"),
+            loginField(authDetails, loginPassword),
             const SizedBox(height: 10),
             buildSpaceBetweenContainer(auth, authDetails),
             const SizedBox(height: 10),
-            buildLoginButton(auth, authDetails),
+            buildLoginButton(context,auth, authDetails),
             const SizedBox(height: 20),
             registerLabel(auth),
           ],
@@ -131,7 +133,7 @@ Widget loginPhoneField(Map<String, dynamic> authDetails) {
 Widget loginField(Map<String, dynamic> authDetails, String type){
   String text = "Enter email";
   bool obscure = false;
-  if(type == "password"){
+  if(type == loginPassword){
     text = "Enter password";
     obscure = true;
   }
@@ -161,6 +163,9 @@ Widget loginField(Map<String, dynamic> authDetails, String type){
         ),
       ),
     ),
+    onChanged: (value) {
+      authDetails[type] = value; // Update authDetails with the input value
+    },
   );
 }
 
@@ -194,22 +199,13 @@ Widget loginCodeField(){
   );
 }
 
-Widget buildLoginButton(FirebaseAuth auth, Map<String, dynamic> authDetails) {
+Widget buildLoginButton(BuildContext context,FirebaseAuth auth, Map<String, dynamic> authDetails) {
   return ElevatedButton(
     onPressed: () async {
-      String phoneString = authDetails[numberString];
-      print(phoneString);
-      Map<String, dynamic> resultsMap = await verifyPhoneNumber(auth, phoneString);
-      resultsMap.forEach((key, newValue) {
-        if (LoginControllerState.authenticationMap.value.containsKey(key)) {
-          LoginControllerState.authenticationMap.value[key] = newValue; // Update the value if key exists
-        }
-      });
+      bool isSuccessful = await signInWithEmailAndPassword(auth, authDetails);
 
-      if(resultsMap[result]){
-        LoginControllerState.loginToggled.value = true;
-      }else{
-        // error
+      if (isSuccessful) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
       }
     },
     style: ElevatedButton.styleFrom(
