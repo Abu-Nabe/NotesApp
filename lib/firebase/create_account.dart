@@ -46,3 +46,29 @@ Future<bool> addAccountToDb(String userId, Map<String, dynamic> authDetails) asy
     return false;
   }
 }
+
+Future<bool> signInWithEmailAndPassword(FirebaseAuth auth, Map<String, dynamic> authDetails) async {
+  try {
+    // Sign in the user with email and password
+    await auth.signInWithEmailAndPassword(
+      email: authDetails[loginEmail], // Replace with your email key
+      password: authDetails[loginPassword], // Replace with your password key
+    );
+
+    return true; // Return true on success
+  } on FirebaseAuthException catch (e) {
+    // Handle sign-in errors here
+    if (e.code == 'user-not-found') {
+      updateAuthDetails(authDetails, loginError, 'No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      updateAuthDetails(authDetails, loginError, 'Wrong password provided.');
+    } else {
+      updateAuthDetails(authDetails, loginError, 'Error Signing In.');
+    }
+    return false; // Return false on error
+  } catch (e) {
+    // Handle any other errors
+    updateAuthDetails(authDetails, loginError, 'Error Signing In.');
+    return false; // Return false for any other error
+  }
+}
