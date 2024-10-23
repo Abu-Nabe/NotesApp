@@ -1,4 +1,5 @@
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:aag_group_services/main_pages/controllers/contact.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,21 +69,23 @@ Widget shadowLine(){
 }
 
 Widget listContainer() {
+  print(ContactsPageState().usersList.value.length);
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
         color: ShadesOfGrey.grey1, // Background color
       ),
-      child: ListView(
-        children: [
-          buildItemContainer("Abu"),
-          Divider(color: ShadesOfGrey.grey1, height: 1), // Divider indicating next item
-          buildItemContainer("Sara"),
-          Divider(color: ShadesOfGrey.grey1, height: 1),
-          buildItemContainer("Ali"),
-          Divider(color: ShadesOfGrey.grey1, height: 1),
-          // Add more items as needed
-        ],
+      child: ListView.builder(
+        itemCount: ContactsPageState().usersList.value.length, // Total number of users
+        itemBuilder: (context, index) {
+          final user = ContactsPageState().usersList.value[index]; // Get the user at the current index
+          return Column(
+            children: [
+              buildItemContainer(user.name), // Display the user's name
+              Divider(color: ShadesOfGrey.grey1, height: 1), // Divider between items
+            ],
+          );
+        },
       ),
     ),
   );
@@ -135,7 +138,7 @@ Widget buildItemContainer(String name) {
             // Handle invite action here
           },
           child: Text(
-            'Invite',
+            'Message',
             style: TextStyle(
               color: Colors.blue, // Text color (customize as needed)
               fontSize: 16, // Font size (customize as needed)
