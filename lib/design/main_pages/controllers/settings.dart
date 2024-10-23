@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../firebase/sign_out.dart';
+import '../../../firebase/sign_out.dart';
 import '../screens/settings_screen.dart';
 
 class SettingsPage extends StatefulWidget {

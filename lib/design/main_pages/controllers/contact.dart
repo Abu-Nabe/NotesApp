@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../../../firebase/currentUserId.dart';
 import '../../authentication_pages/models/user_model.dart';
-import '../../firebase/currentUserId.dart';
 import '../screens/contact_screen.dart';
 
 class ContactsPage extends StatefulWidget {

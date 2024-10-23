@@ -1,17 +1,17 @@
 import 'dart:ffi';
 
-import 'package:aag_group_services/authentication_pages/login_controller.dart';
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../consts/strings/authentication_strings/authentication_strings.dart';
+import '../../../extension/phone_number_simplifier.dart';
+import '../../../firebase/create_account.dart';
 import '../../bottom_navigation.dart';
-import '../../consts/strings/authentication_strings/authentication_strings.dart';
-import '../../extension/phone_number_simplifier.dart';
-import '../../firebase/create_account.dart';
-import '../../firebase/phone_verification.dart';
+import '../../navigation/navigation_functions.dart';
+import '../login_controller.dart';
 
 Widget build_login_screen(BuildContext context, FirebaseAuth auth) {
   final size = MediaQuery.of(context).size;
@@ -205,7 +205,7 @@ Widget buildLoginButton(BuildContext context,FirebaseAuth auth, Map<String, dyna
       bool isSuccessful = await signInWithEmailAndPassword(auth, authDetails);
 
       if (isSuccessful) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigation()));
+        pushReplacementWithoutAnimation(context, BottomNavigation()); // Replace with your target page
       }
     },
     style: ElevatedButton.styleFrom(

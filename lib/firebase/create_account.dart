@@ -2,7 +2,7 @@ import 'package:aag_group_services/consts/strings/authentication_strings/authent
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import '../authentication_pages/functions/update_auth.dart';
+import '../design/authentication_pages/functions/update_auth.dart';
 
 Future<UserCredential?> createAnAccount(FirebaseAuth auth, Map<String, dynamic> authDetails) async {
   try {
