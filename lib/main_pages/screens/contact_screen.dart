@@ -69,16 +69,15 @@ Widget shadowLine(){
 }
 
 Widget listContainer() {
-  print(ContactsPageState().usersList.value.length);
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
         color: ShadesOfGrey.grey1, // Background color
       ),
       child: ListView.builder(
-        itemCount: ContactsPageState().usersList.value.length, // Total number of users
+        itemCount: ContactsPageState.usersList.value.length, // Total number of users
         itemBuilder: (context, index) {
-          final user = ContactsPageState().usersList.value[index]; // Get the user at the current index
+          final user = ContactsPageState.usersList.value[index]; // Get the user at the current index
           return Column(
             children: [
               buildItemContainer(user.name), // Display the user's name
@@ -132,22 +131,44 @@ Widget buildItemContainer(String name) {
             ),
           ],
         ),
-        // Invite button
-        TextButton(
-          onPressed: () {
-            // Handle invite action here
-          },
-          child: Text(
-            'Message',
-            style: TextStyle(
-              color: Colors.blue, // Text color (customize as needed)
-              fontSize: 16, // Font size (customize as needed)
+        // Notes icon and Message button in a row
+        Row(
+          children: [
+            // Notes icon with separate on click action
+            GestureDetector(
+              onTap: () {
+
+              },
+              child: Container(
+                padding: EdgeInsets.all(8), // Padding for better touch area
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle, // Makes the icon button circular
+                  color: Colors.blue.withOpacity(0.1), // Background color with transparency
+                ),
+                child: Icon(
+                  Icons.note_add,
+                  size: 24, // Size of the icon
+                  color: Colors.blue, // Icon color
+                ),
+              ),
             ),
-          ),
+            TextButton(
+              onPressed: () {
+                // Handle message action here
+                print('Message button clicked');
+              },
+              child: Text(
+                'Message',
+                style: TextStyle(
+                  color: Colors.blue, // Text color (customize as needed)
+                  fontSize: 16, // Font size (customize as needed)
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     ),
   );
 }
-
 

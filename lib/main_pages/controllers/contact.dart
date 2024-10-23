@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../authentication_pages/models/user_model.dart';
+import '../../firebase/currentUserId.dart';
 import '../screens/contact_screen.dart';
 
 class ContactsPage extends StatefulWidget {
@@ -12,14 +13,16 @@ class ContactsPage extends StatefulWidget {
 }
 
 class ContactsPageState extends State<ContactsPage> {
-  ValueNotifier<List<UserModel>> usersList = ValueNotifier<List<UserModel>>([]);
+  static ValueNotifier<List<UserModel>> usersList = ValueNotifier<List<UserModel>>([]);
   final database = FirebaseDatabase.instance.ref();
+  String? currentUserId;
 
   @override
   void initState() {
     super.initState();
 
     usersList.addListener(updateValue);
+    currentUserId = getCurrentUserID();
 
     fetchUsers();
   }
@@ -28,16 +31,25 @@ class ContactsPageState extends State<ContactsPage> {
     setState(() {});
   }
 
+  // Function to remove the current user from the fetched users list
+  void removeCurrentUserFromList(Map<dynamic, dynamic> usersMap) {
+    // Remove the current user from the usersMap
+    usersMap.removeWhere((key, value) => key == currentUserId);
+  }
+
   void fetchUsers() {
     // Listening for changes in the 'users' node
     database.child('users').onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists) {
-        List<UserModel> fetchedUsers = [];
         Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
 
+        // Remove the currently logged-in user from the usersMap
+        removeCurrentUserFromList(usersMap);
+
         // Iterate over each user ID and map each user data to UserModel
+        List<UserModel> fetchedUsers = [];
         usersMap.forEach((userId, userData) {
           // Make sure to handle the case where userData might not be a Map
           if (userData is Map) {
@@ -46,8 +58,7 @@ class ContactsPageState extends State<ContactsPage> {
         });
 
         // Update the state with the new user list
-        usersList.value = fetchedUsers; // This assumes usersList is a List<UserModel>
-        // print(fetchedUsers.length);
+        usersList.value = fetchedUsers; // Update ValueNotifier
       }
     }, onError: (error) {
       print('Error listening to users: $error');
@@ -56,7 +67,7 @@ class ContactsPageState extends State<ContactsPage> {
 
   @override
   void dispose() {
-    usersList.dispose(); // Dispose the ValueNotifier
+    usersList.removeListener(updateValue); // Dispose the ValueNotifier
     super.dispose();
   }
 
