@@ -1,5 +1,5 @@
-import 'package:aag_group_services/authentication_pages/screens/login_screen.dart';
-import 'package:aag_group_services/authentication_pages/screens/register_screen.dart';
+import 'package:aag_group_services/design/authentication_pages/screens/login_screen.dart';
+import 'package:aag_group_services/design/authentication_pages/screens/register_screen.dart';
 import 'package:aag_group_services/firebase/initialize_ref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

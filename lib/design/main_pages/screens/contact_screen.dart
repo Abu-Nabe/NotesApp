@@ -1,7 +1,10 @@
 import 'package:aag_group_services/consts/colors.dart';
-import 'package:aag_group_services/main_pages/controllers/contact.dart';
+import 'package:aag_group_services/design/communications/controllers/notes_controller.darts.dart';
+import 'package:aag_group_services/design/navigation/navigation_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../controllers/contact.dart';
 
 Widget build_contact_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -25,7 +28,7 @@ Widget build_contact_screen(BuildContext context) {
         children: [
           searchField(),
           shadowLine(),
-          listContainer(),
+          listContainer(context),
         ],
       ),
     ),
@@ -68,7 +71,7 @@ Widget shadowLine(){
   );
 }
 
-Widget listContainer() {
+Widget listContainer(BuildContext context) {
   return Expanded(
     child: Container(
       decoration: BoxDecoration(
@@ -80,7 +83,7 @@ Widget listContainer() {
           final user = ContactsPageState.usersList.value[index]; // Get the user at the current index
           return Column(
             children: [
-              buildItemContainer(user.name), // Display the user's name
+              buildItemContainer(context, user.name), // Display the user's name
               Divider(color: ShadesOfGrey.grey1, height: 1), // Divider between items
             ],
           );
@@ -91,7 +94,7 @@ Widget listContainer() {
 }
 
 
-Widget buildItemContainer(String name) {
+Widget buildItemContainer(BuildContext context,String name) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Add some padding around the container
     decoration: BoxDecoration(
@@ -137,7 +140,7 @@ Widget buildItemContainer(String name) {
             // Notes icon with separate on click action
             GestureDetector(
               onTap: () {
-
+                pushWithoutAnimation(context, NotesController());
               },
               child: Container(
                 padding: EdgeInsets.all(8), // Padding for better touch area

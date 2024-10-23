@@ -1,5 +1,5 @@
-import 'package:aag_group_services/authentication_pages/functions/update_auth.dart';
 import 'package:aag_group_services/consts/strings/authentication_strings/authentication_strings.dart';
+import 'package:aag_group_services/design/authentication_pages/functions/update_auth.dart';
 
 import '../login_controller.dart';
 

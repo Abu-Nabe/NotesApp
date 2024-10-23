@@ -1,9 +1,9 @@
-import 'package:aag_group_services/authentication_pages/login_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../bottom_navigation.dart';
+import '../design/authentication_pages/login_controller.dart';
+import '../design/bottom_navigation.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
