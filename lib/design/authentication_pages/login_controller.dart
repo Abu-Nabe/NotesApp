@@ -1,3 +1,4 @@
+import 'package:aag_group_services/design/authentication_pages/screens/forgot_password_screen.dart';
 import 'package:aag_group_services/design/authentication_pages/screens/login_screen.dart';
 import 'package:aag_group_services/design/authentication_pages/screens/register_screen.dart';
 import 'package:aag_group_services/firebase/initialize_ref.dart';
@@ -51,6 +52,8 @@ class LoginControllerState extends State<LoginController> {
         return build_login_screen(context, auth);
       case 2:
         return build_register_screen(context, auth);
+      case 3:
+        return build_forgot_password_screen(context, auth);
       default:
         return build_login_screen(context, auth);
     }

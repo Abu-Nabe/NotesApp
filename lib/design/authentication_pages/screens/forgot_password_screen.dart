@@ -1,16 +1,20 @@
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:aag_group_services/design/authentication_pages/screens/register_screen.dart';
+import 'package:aag_group_services/firebase/reset_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../consts/strings/authentication_strings/authentication_strings.dart';
+import '../../../extension/email_verifier.dart';
 import '../../../firebase/create_account.dart';
 import '../../bottom_navigation.dart';
 import '../../navigation/navigation_functions.dart';
 import '../functions/register_type.dart';
+import '../functions/update_auth.dart';
 import '../login_controller.dart';
 
-Widget build_register_screen(BuildContext context, FirebaseAuth auth) {
+Widget build_forgot_password_screen(BuildContext context, FirebaseAuth auth) {
   final size = MediaQuery.of(context).size;
 
   return Scaffold(
@@ -73,19 +77,13 @@ Widget build_container(BuildContext context, FirebaseAuth auth) {
           children: [
             containerLabel(),
             SizedBox(height: 20),
-            inputField(authDetails, registerEmail),
-            const SizedBox(height: 20),
-            inputPasswordField(authDetails, registerPassword),
-            const SizedBox(height: 20),
-            inputField(authDetails, registerFirstName),
-            const SizedBox(height: 20),
-            inputField(authDetails, registerLastName),
+            inputField(authDetails, forgotPasswordEmail),
             const SizedBox(height: 20),
             buildRegisterButton(context,auth, authDetails),
-            if (authDetails[registerError] != null && authDetails[registerError].isNotEmpty)
+            if (authDetails[forgotPasswordError] != null && authDetails[forgotPasswordError].isNotEmpty)
               ...[
                 const SizedBox(height: 20),
-                errorLabel(authDetails[registerError]),
+                errorLabel(authDetails[forgotPasswordError]),
               ],
           ],
         ),
@@ -97,7 +95,7 @@ Widget build_container(BuildContext context, FirebaseAuth auth) {
 
 Widget containerLabel(){
   return Text(
-    "Create An Account",
+    "Forgot Password",
     style: TextStyle(
       fontSize: 18, // Font size for the title
       fontWeight: FontWeight.bold, // Bold text for the title
@@ -140,54 +138,20 @@ Widget inputField(Map<String, dynamic> authDetails, String type){
   );
 }
 
-Widget inputPasswordField(Map<String, dynamic> authDetails, String type) {
-  String text = checkType(type);
-
-  return TextField(
-    obscureText: true, // Set this to true to hide password characters
-    decoration: InputDecoration(
-      labelText: text, // Label for the input field
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0), // Add circular border radius
-        borderSide: BorderSide(
-          color: ShadesOfGrey.grey2, // Border color
-          width: 2.0, // Border width
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(
-          color: ShadesOfGrey.grey2, // Border color for the enabled state
-          width: 2.0,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(
-          color: ShadesOfPurple.purple2, // Border color when focused
-          width: 2.0,
-        ),
-      ),
-    ),
-    onChanged: (value) {
-      authDetails[type] = value; // Update authDetails with the input value
-    },
-  );
-}
-
-
 Widget buildRegisterButton(BuildContext context,FirebaseAuth auth, Map<String, dynamic> authDetails) {
   return ElevatedButton(
     onPressed: () async {
-      if(inputType(authDetails)){
-        UserCredential? userCredential = await createAnAccount(auth, authDetails);
-        if (userCredential != null) {
-          String userId = userCredential.user?.uid ?? '';
-          bool isSuccessful = await addAccountToDb(userId, authDetails);
+      if(authDetails[forgotPasswordEmail].toString().trim() == "" || authDetails[forgotPasswordEmail] == null){
+        updateAuthDetails(authDetails, forgotPasswordError, 'Make sure email is not empty');
+      }else if (!isValidEmail(authDetails[forgotPasswordEmail].toString())) {
+        updateAuthDetails(authDetails, forgotPasswordError, 'Email is not valid');
+      }else{
+        bool isSuccessful = await resetPassword(auth, authDetails[forgotPasswordEmail].toString());
 
-          if (isSuccessful) {
-            pushReplacementWithoutAnimation(context, BottomNavigation()); // Replace with your target page
-          }
+        if(isSuccessful){
+          LoginControllerState.screenUpdate.value = 1; // Change to the login screen
+        }else{
+          updateAuthDetails(authDetails, forgotPasswordError, 'Error: failed to send reset link to email');
         }
       }
     },
@@ -203,7 +167,7 @@ Widget buildRegisterButton(BuildContext context,FirebaseAuth auth, Map<String, d
       ),
     ),
     child: const Text(
-      "Register",
+      "Send Link To Email",
       style: TextStyle(
         fontSize: 16,
         color: Colors.white, // Set text color
@@ -214,7 +178,7 @@ Widget buildRegisterButton(BuildContext context,FirebaseAuth auth, Map<String, d
 }
 
 Widget errorLabel(String errorText){
-  Color errorColor = ShadesOfRed.red5;
+  Color errorColor = ShadesOfPurple.purple_violet;
 
   return InkWell(
     onTap: () {

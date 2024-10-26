@@ -13,4 +13,6 @@ const registerFirstName = "rFirstName";
 const registerLastName = "rLastName";
 const registerError = "rError";
 
+const forgotPasswordEmail = "fEmail";
+const forgotPasswordError = "fError";
 
