@@ -62,7 +62,24 @@ class ShadesOfPurple {
   static const Color purple3 = Color(0xFFB266FF); // Bright purple
   static const Color purple4 = Color(0xFF7F00FF); // Dark purple
   static const Color purple5 = Color(0xFF4B0082); // Very dark purple
+
+  static const Color purple6 = Color(0xFFE0BBFF); // Soft pastel purple
+  static const Color purple7 = Color(0xFFD1A3FF); // Light lavender purple
+  static const Color purple8 = Color(0xFFA64DFF); // Vibrant medium purple
+  static const Color purple9 = Color(0xFF8000FF); // Standard bright purple
+  static const Color purple10 = Color(0xFF6600CC); // Deep violet
+
+  static const Color purple11 = Color(0xFF5A0099); // Darker violet
+  static const Color purple12 = Color(0xFF3B0070); // Deep indigo-purple
+  static const Color purple13 = Color(0xFF2E004B); // Very deep purple
+  static const Color purple14 = Color(0xFF210033); // Almost black purple
+  static const Color purple15 = Color(0xFF17001F); // Blackish purple
+
+  static const Color purple_iris = Color(0xFF5D3FD3); // Blackish purple
+  static const Color purple_violet = Color(0xFF7F00FF); // Blackish purple
+
 }
+
 
 class ShadesOfOrange {
   static const Color orange1 = Color(0xFFFFF2E5); // Very light orange

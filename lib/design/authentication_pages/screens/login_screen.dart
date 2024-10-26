@@ -64,7 +64,7 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
           mainAxisSize: MainAxisSize.min, // Adjust the height based on its children
           crossAxisAlignment: CrossAxisAlignment.center, // Align content to the center
           children: [
-            loginLabel(),
+            loginIcon(),
             SizedBox(height: 20),
             loginField(authDetails, loginEmail),
             const SizedBox(height: 20),
@@ -81,6 +81,15 @@ Widget build_login_container(BuildContext context, FirebaseAuth auth) {
     ),
   );
 }
+
+Widget loginIcon() {
+  return Image.asset(
+    'assets/images/icon.jpeg',
+    width: 150,
+    height: 100,
+  );
+}
+
 
 Widget loginLabel(){
   return Text(
@@ -210,17 +219,17 @@ Widget buildLoginButton(BuildContext context,FirebaseAuth auth, Map<String, dyna
     },
     style: ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 32.0),
-      backgroundColor: ShadesOfPurple.purple3, // Set background color
+      backgroundColor: ShadesOfPurple.purple_iris, // Set background color
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0), // Match button with container radius
         side: const BorderSide(
-          color: ShadesOfPurple.purple4, // Set border color
+          color: ShadesOfPurple.purple_violet, // Set border color
           width: 2.0, // Border width
         ),
       ),
     ),
     child: const Text(
-      "Continue",
+      "Login",
       style: TextStyle(
         fontSize: 16,
         color: Colors.white, // Set text color
@@ -256,7 +265,7 @@ Widget forgotLabel(FirebaseAuth auth){
 
   return InkWell(
     onTap: () {
-
+      LoginControllerState.screenUpdate.value = 3; // Change to the login screen
     },
     child: Text(
       errorText,
@@ -273,7 +282,7 @@ Widget forgotLabel(FirebaseAuth auth){
 
 Widget registerLabel(FirebaseAuth auth){
   String errorText = "Register";
-  Color errorColor = ShadesOfPurple.purple4;
+  Color errorColor = ShadesOfPurple.purple_violet;
 
   return InkWell(
     onTap: () {
