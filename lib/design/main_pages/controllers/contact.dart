@@ -63,7 +63,7 @@ class ContactsPageState extends State<ContactsPage> {
 
   void fetchUsers() {
     // Listening for changes in the 'users' node
-    database.child('users').onValue.listen((event) {
+    database.child('contacts').child(getCurrentUserID()).onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists) {
@@ -71,13 +71,12 @@ class ContactsPageState extends State<ContactsPage> {
 
         // Remove the currently logged-in user from the usersMap
         removeCurrentUserFromList(usersMap);
-
         // Iterate over each user ID and map each user data to UserModel
         List<UserModel> fetchedUsers = [];
         usersMap.forEach((userId, userData) {
           // Make sure to handle the case where userData might not be a Map
           if (userData is Map) {
-            fetchedUsers.add(UserModel.fromMap(Map<String, dynamic>.from(userData)));
+            fetchedUsers.add(UserModel.fromMap(userId, Map<String, dynamic>.from(userData)));
           }
         });
 
@@ -106,9 +105,12 @@ class ContactsPageState extends State<ContactsPage> {
         List<UserModel> fetchedUsers = [];
         usersMap.forEach((userId, userData) {
           if (userData is Map) {
-            UserModel user = UserModel.fromMap(Map<String, dynamic>.from(userData));
-            // Check if user's name or other fields match the search text
-            if (user.name.toLowerCase().contains(search) || user.email.toLowerCase().contains(search)) {
+            // Pass `userId` as the `id` to UserModel
+            UserModel user = UserModel.fromMap(userId, Map<String, dynamic>.from(userData));
+            // Check if user's name, email, or id matches the search text
+            if (user.name.toLowerCase().contains(search) ||
+                user.email.toLowerCase().contains(search) ||
+                user.id.toLowerCase().contains(search)) {
               fetchedUsers.add(user);
             }
           }
@@ -121,7 +123,6 @@ class ContactsPageState extends State<ContactsPage> {
       print('Error listening to users: $error');
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

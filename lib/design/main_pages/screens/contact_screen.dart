@@ -5,7 +5,9 @@ import 'package:aag_group_services/design/navigation/navigation_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../firebase/add_friend_firebase.dart';
 import '../controllers/contact.dart';
+import '../functions/contact_functions/check_friends.dart';
 
 Widget build_contact_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -104,16 +106,20 @@ Widget listContainer(BuildContext context) {
         separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
         itemBuilder: (context, index) {
           final user = userModel[index]; // Get the user at the current index
-          return buildItemContainer(context, user.name); // Display each user's name
+          return buildItemContainer(context, user.name, user); // Display each user's name
         },
       ),
     ),
   );
 }
 
-
-
-Widget buildItemContainer(BuildContext context, String name) {
+Widget buildItemContainer(BuildContext context, String name, UserModel userModel) {
+  bool user_type = false;
+  // Check if search mode is active
+  if (ContactsPageState.searchMode.value) {
+    // Check if the user is a friend
+    user_type = checkFriends(userModel);
+  }
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
     decoration: BoxDecoration(
@@ -154,15 +160,15 @@ Widget buildItemContainer(BuildContext context, String name) {
           ],
         ),
         // Conditionally render either buildSearchItemContainer or buildRightItemContainer
-        ContactsPageState.searchMode.value
-            ? buildSearchItemContainer(context)
-            : buildRightItemContainer(context),
+        user_type
+            ? buildSearchItemContainer(context, userModel) // Call for friends
+            : buildRightItemContainer(context, userModel), // Call for non-friends
       ],
     ),
   );
 }
 
-Widget buildRightItemContainer(BuildContext context){
+Widget buildRightItemContainer(BuildContext context, UserModel userModel){
   return Row(
     children: [
       // Notes icon with separate on click action
@@ -200,23 +206,31 @@ Widget buildRightItemContainer(BuildContext context){
   );
 }
 
-Widget buildSearchItemContainer(BuildContext context) {
+Widget buildSearchItemContainer(BuildContext context, UserModel userModel) {
+  bool added = false; // Track whether the friend has been added
+  String friendStatus = "Add"; // Initial friend status
+
   return TextButton(
     onPressed: () {
-      // Handle message action here
-      print('Message button clicked');
+      if (added) return; // Prevent adding if already added
+
+      addFriendToDB(userModel); // Add the friend to the database
+      friendStatus = "Added"; // Update the friend status
+      added = true; // Set added to true
     },
     child: Row(
       mainAxisSize: MainAxisSize.min, // Adjust size to fit icon and text only
       children: [
-        Icon(
-          Icons.add, // The + icon
-          color: Colors.blue, // Icon color
-          size: 18, // Icon size
-        ),
+        // Conditionally show the add icon based on the added state
+        if (!added)
+          Icon(
+            Icons.add, // The + icon
+            color: Colors.blue, // Icon color
+            size: 18, // Icon size
+          ),
         SizedBox(width: 4), // Space between icon and text
         Text(
-          'Add',
+          friendStatus,
           style: TextStyle(
             color: Colors.blue, // Text color
             fontSize: 16, // Font size
@@ -226,3 +240,4 @@ Widget buildSearchItemContainer(BuildContext context) {
     ),
   );
 }
+
