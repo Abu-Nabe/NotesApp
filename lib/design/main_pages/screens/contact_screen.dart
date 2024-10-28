@@ -1,4 +1,5 @@
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
 import 'package:aag_group_services/design/communications/controllers/notes_controller.darts.dart';
 import 'package:aag_group_services/design/navigation/navigation_functions.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,10 +36,12 @@ Widget build_contact_screen(BuildContext context) {
   );
 }
 
-Widget searchField(){
-  return  Padding(
+Widget searchField() {
+  TextEditingController controller = ContactsPageState.searchController.value;
+  return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding for the search bar
     child: TextField(
+      controller: controller, // Controller for managing text input
       decoration: InputDecoration(
         hintText: 'Search Contacts', // Placeholder text
         filled: true, // Fill the background
@@ -48,7 +51,24 @@ Widget searchField(){
           borderSide: BorderSide.none, // No border line
         ),
         prefixIcon: Icon(Icons.search), // Search icon
+        suffixIcon: ContactsPageState.searchMode.value
+            ? IconButton(
+          icon: Icon(Icons.clear), // Clear icon
+          onPressed: () {
+            controller.clear(); // Clear the text
+            ContactsPageState.searchText.value = "";
+            ContactsPageState.searchMode.value = false;
+          },
+        ) : null,
       ),
+      onChanged: (text) {
+        ContactsPageState.searchText.value = text;
+        if(text.toString().trim() == ""){
+          ContactsPageState.searchMode.value = false;
+        }else{
+          ContactsPageState.searchMode.value = true;
+        }
+      },
     ),
   );
 }
@@ -72,21 +92,19 @@ Widget shadowLine(){
 }
 
 Widget listContainer(BuildContext context) {
+  List<UserModel> userModel = ContactsPageState.searchMode.value
+      ? ContactsPageState.searchList.value
+      : ContactsPageState.usersList.value;
+
   return Expanded(
     child: Container(
-      decoration: BoxDecoration(
-        color: ShadesOfGrey.grey1, // Background color
-      ),
-      child: ListView.builder(
-        itemCount: ContactsPageState.usersList.value.length, // Total number of users
+      color: ShadesOfGrey.grey1, // Background color
+      child: ListView.separated(
+        itemCount: userModel.length,
+        separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
         itemBuilder: (context, index) {
-          final user = ContactsPageState.usersList.value[index]; // Get the user at the current index
-          return Column(
-            children: [
-              buildItemContainer(context, user.name), // Display the user's name
-              Divider(color: ShadesOfGrey.grey1, height: 1), // Divider between items
-            ],
-          );
+          final user = userModel[index]; // Get the user at the current index
+          return buildItemContainer(context, user.name); // Display each user's name
         },
       ),
     ),
@@ -94,9 +112,10 @@ Widget listContainer(BuildContext context) {
 }
 
 
-Widget buildItemContainer(BuildContext context,String name) {
+
+Widget buildItemContainer(BuildContext context, String name) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Add some padding around the container
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
     decoration: BoxDecoration(
       border: Border(
         bottom: BorderSide(color: Colors.grey[300]!, width: 1), // Optional bottom border for separation
@@ -134,44 +153,76 @@ Widget buildItemContainer(BuildContext context,String name) {
             ),
           ],
         ),
-        // Notes icon and Message button in a row
-        Row(
-          children: [
-            // Notes icon with separate on click action
-            GestureDetector(
-              onTap: () {
-                pushWithoutAnimation(context, NotesController());
-              },
-              child: Container(
-                padding: EdgeInsets.all(8), // Padding for better touch area
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle, // Makes the icon button circular
-                  color: Colors.blue.withOpacity(0.1), // Background color with transparency
-                ),
-                child: Icon(
-                  Icons.note_add,
-                  size: 24, // Size of the icon
-                  color: Colors.blue, // Icon color
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                // Handle message action here
-                print('Message button clicked');
-              },
-              child: Text(
-                'Message',
-                style: TextStyle(
-                  color: Colors.blue, // Text color (customize as needed)
-                  fontSize: 16, // Font size (customize as needed)
-                ),
-              ),
-            ),
-          ],
-        ),
+        // Conditionally render either buildSearchItemContainer or buildRightItemContainer
+        ContactsPageState.searchMode.value
+            ? buildSearchItemContainer(context)
+            : buildRightItemContainer(context),
       ],
     ),
   );
 }
 
+Widget buildRightItemContainer(BuildContext context){
+  return Row(
+    children: [
+      // Notes icon with separate on click action
+      GestureDetector(
+        onTap: () {
+          pushWithoutAnimation(context, NotesController());
+        },
+        child: Container(
+          padding: EdgeInsets.all(8), // Padding for better touch area
+          decoration: BoxDecoration(
+            shape: BoxShape.circle, // Makes the icon button circular
+            color: Colors.blue.withOpacity(0.1), // Background color with transparency
+          ),
+          child: Icon(
+            Icons.note_add,
+            size: 24, // Size of the icon
+            color: Colors.blue, // Icon color
+          ),
+        ),
+      ),
+      TextButton(
+        onPressed: () {
+          // Handle message action here
+          print('Message button clicked');
+        },
+        child: Text(
+          'Message',
+          style: TextStyle(
+            color: Colors.blue, // Text color (customize as needed)
+            fontSize: 16, // Font size (customize as needed)
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildSearchItemContainer(BuildContext context) {
+  return TextButton(
+    onPressed: () {
+      // Handle message action here
+      print('Message button clicked');
+    },
+    child: Row(
+      mainAxisSize: MainAxisSize.min, // Adjust size to fit icon and text only
+      children: [
+        Icon(
+          Icons.add, // The + icon
+          color: Colors.blue, // Icon color
+          size: 18, // Icon size
+        ),
+        SizedBox(width: 4), // Space between icon and text
+        Text(
+          'Add',
+          style: TextStyle(
+            color: Colors.blue, // Text color
+            fontSize: 16, // Font size
+          ),
+        ),
+      ],
+    ),
+  );
+}
