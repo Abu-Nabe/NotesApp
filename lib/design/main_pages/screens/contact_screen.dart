@@ -119,6 +119,7 @@ Widget buildItemContainer(BuildContext context, String name, UserModel userModel
   if (ContactsPageState.searchMode.value) {
     // Check if the user is a friend
     user_type = checkFriends(userModel);
+    print(user_type);
   }
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
@@ -207,22 +208,18 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel){
 }
 
 Widget buildSearchItemContainer(BuildContext context, UserModel userModel) {
-  bool added = false; // Track whether the friend has been added
-  String friendStatus = "Add"; // Initial friend status
-
   return TextButton(
     onPressed: () {
-      if (added) return; // Prevent adding if already added
-
       addFriendToDB(userModel); // Add the friend to the database
-      friendStatus = "Added"; // Update the friend status
-      added = true; // Set added to true
+
+      ContactsPageState.searchController.value.clear();
+      ContactsPageState.searchText.value = "";
+      ContactsPageState.searchMode.value = false;
     },
     child: Row(
       mainAxisSize: MainAxisSize.min, // Adjust size to fit icon and text only
       children: [
         // Conditionally show the add icon based on the added state
-        if (!added)
           Icon(
             Icons.add, // The + icon
             color: Colors.blue, // Icon color
@@ -230,7 +227,7 @@ Widget buildSearchItemContainer(BuildContext context, UserModel userModel) {
           ),
         SizedBox(width: 4), // Space between icon and text
         Text(
-          friendStatus,
+          "Add",
           style: TextStyle(
             color: Colors.blue, // Text color
             fontSize: 16, // Font size

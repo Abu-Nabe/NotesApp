@@ -18,8 +18,9 @@ class ContactsPageState extends State<ContactsPage> {
 
   static ValueNotifier<String> searchText = ValueNotifier<String>('');
   static ValueNotifier<TextEditingController> searchController = ValueNotifier<TextEditingController>(TextEditingController());
-
   static ValueNotifier<bool> searchMode = ValueNotifier<bool>(false);
+
+  static ValueNotifier<int> updatePage = ValueNotifier<int>(0);
 
   final database = FirebaseDatabase.instance.ref();
   String? currentUserId;
@@ -30,10 +31,11 @@ class ContactsPageState extends State<ContactsPage> {
 
     usersList.addListener(updateValue);
     searchList.addListener(updateValue);
-
     searchMode.addListener(updateValue);
 
     searchText.addListener(searchUsers);
+
+    updatePage.addListener(updateValue);
 
     currentUserId = getCurrentUserID();
 
@@ -47,6 +49,8 @@ class ContactsPageState extends State<ContactsPage> {
     searchMode.removeListener(updateValue);
 
     searchText.removeListener(searchUsers);
+
+    updatePage.removeListener(updateValue);
     super.dispose();
   }
 
@@ -63,7 +67,7 @@ class ContactsPageState extends State<ContactsPage> {
 
   void fetchUsers() {
     // Listening for changes in the 'users' node
-    database.child('contacts').child(getCurrentUserID()).onValue.listen((event) {
+    database.child('contacts').child(currentUserId ?? "").onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists) {
