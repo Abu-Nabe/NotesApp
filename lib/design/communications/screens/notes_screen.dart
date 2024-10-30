@@ -1,8 +1,11 @@
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget build_notes_screen(BuildContext context) {
+import '../../const/reusable_layouts/toolbar_shadow_line.dart';
+
+Widget build_notes_screen(BuildContext context, UserModel receiverModel) {
   final size = MediaQuery.of(context).size;
 
   final List<String> notes = [
@@ -19,8 +22,6 @@ Widget build_notes_screen(BuildContext context) {
     "Test Account",
   ];
 
-
-
   return Scaffold(
     body: Container(
       width: size.width, // Full width
@@ -28,7 +29,8 @@ Widget build_notes_screen(BuildContext context) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes the TextField to the bottom
         children: [
-          buildToolbar(context),
+          buildToolbar(context, receiverModel.name),
+          toolbar_shadow_line(context),
           buildNoteList(context, notes, from),
           buildTextField(context),
         ],
@@ -37,23 +39,23 @@ Widget build_notes_screen(BuildContext context) {
   );
 }
 
-Widget buildToolbar(BuildContext context) {
+Widget buildToolbar(BuildContext context, String name) {
   return AppBar(
     leading: IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.white), // Back arrow icon
+      icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
       onPressed: () {
         Navigator.pop(context); // Navigates back to the previous screen
       },
     ),
     title: Text(
-      "Notes", // Title of the toolbar
+      "${name}'s Notes", // Title of the toolbar with string interpolation
       style: TextStyle(
-        color: Colors.white, // Title text color
+        color: Colors.black, // Title text color
         fontWeight: FontWeight.bold, // Bold text
         fontSize: 20, // Font size of the title
       ),
     ),
-    backgroundColor: Colors.blue, // Background color of the toolbar (customize as needed)
+    backgroundColor: Colors.white, // Background color of the toolbar (customize as needed)
     elevation: 4, // Shadow effect under the AppBar
   );
 }

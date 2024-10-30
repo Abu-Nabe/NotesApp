@@ -174,7 +174,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel){
       // Notes icon with separate on click action
       GestureDetector(
         onTap: () {
-          pushWithoutAnimation(context, NotesController());
+          pushWithoutAnimation(context, NotesController(receiverModel: userModel,));
         },
         child: Container(
           padding: EdgeInsets.all(8), // Padding for better touch area
