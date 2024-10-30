@@ -119,7 +119,6 @@ Widget buildItemContainer(BuildContext context, String name, UserModel userModel
   if (ContactsPageState.searchMode.value) {
     // Check if the user is a friend
     user_type = checkFriends(userModel);
-    print(user_type);
   }
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
