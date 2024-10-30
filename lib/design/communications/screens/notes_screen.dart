@@ -98,13 +98,29 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
                       ),
                     ),
                     SizedBox(height: 4), // Add some space between the note and the sender
-                    Text(
-                      'From: ${from[index]}', // Second text: the sender
-                      style: TextStyle(
-                        fontSize: 12, // Smaller text size for the sender
-                        color: Colors.grey[700], // A lighter color for the sender
-                      ),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'From: ${from[index]}', // Second text: the sender
+                          style: TextStyle(
+                            fontSize: 12, // Smaller text size for the sender
+                            color: Colors.grey[700], // A lighter color for the sender
+                          ),
+                          overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+                          maxLines: 1, // Restrict to a single line
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          '${from[index]}', // Second text: the sender
+                          style: TextStyle(
+                            fontSize: 12, // Smaller text size for the sender
+                            color: Colors.grey[700], // A lighter color for the sender
+                          ),
+                        ),
+                      ]
+                    )
+
                   ],
                 ),
               ),

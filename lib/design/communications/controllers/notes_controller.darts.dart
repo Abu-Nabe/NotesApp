@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/notes_screen.dart';
 
 class NotesController extends StatefulWidget {
+  
   const NotesController({super.key});
 
   @override
