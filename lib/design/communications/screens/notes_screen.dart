@@ -54,6 +54,8 @@ Widget buildToolbar(BuildContext context, String name) {
         fontWeight: FontWeight.bold, // Bold text
         fontSize: 20, // Font size of the title
       ),
+      overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+      maxLines: 1, // Restrict to a single line
     ),
     backgroundColor: Colors.white, // Background color of the toolbar (customize as needed)
     elevation: 4, // Shadow effect under the AppBar
@@ -122,7 +124,6 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
                         ),
                       ]
                     )
-
                   ],
                 ),
               ),
@@ -141,9 +142,18 @@ Widget buildTextField(BuildContext context) {
     child: TextField(
       decoration: InputDecoration(
         hintText: 'Write a note...',
-        border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: ShadesOfPurple.purple_iris),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: ShadesOfWhite.white3, width: 2), // Solid grey border
+        ),
         suffixIcon: IconButton(
           icon: Icon(Icons.send),
+          color: ShadesOfPurple.purple_iris, // Set icon color
           onPressed: () {
             // Handle send action
           },
