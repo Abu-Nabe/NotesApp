@@ -2,7 +2,7 @@ class NotesModel {
   final String id;
   final String name;
   final String message;
-  final int createdAt;
+  final String createdAt;
 
   NotesModel({
     required this.id,
@@ -17,7 +17,7 @@ class NotesModel {
       id: id,
       name: data['name'] ?? 'No Name',
       message: data['message'] ?? 'No Message',
-      createdAt: data['created_at'] ?? 0,
+      createdAt: data['created_at'] ?? "0",
     );
   }
 

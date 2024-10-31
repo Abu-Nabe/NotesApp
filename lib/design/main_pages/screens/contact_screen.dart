@@ -1,6 +1,6 @@
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
-import 'package:aag_group_services/design/communications/controllers/notes_controller.darts.dart';
+import 'package:aag_group_services/design/communications/controllers/notes_controller.dart';
 import 'package:aag_group_services/design/navigation/navigation_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,6 @@ Widget build_contact_screen(BuildContext context) {
     ),
   );
 }
-
 Widget searchField() {
   TextEditingController controller = ContactsPageState.searchController.value;
   return Padding(
@@ -99,15 +98,20 @@ Widget listContainer(BuildContext context) {
       : ContactsPageState.usersList.value;
 
   return Expanded(
-    child: Container(
-      color: ShadesOfGrey.grey1, // Background color
-      child: ListView.separated(
-        itemCount: userModel.length,
-        separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
-        itemBuilder: (context, index) {
-          final user = userModel[index]; // Get the user at the current index
-          return buildItemContainer(context, user.name, user); // Display each user's name
-        },
+    child:  GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus(); // Dismiss keyboard on tap
+      },
+      child: Container(
+        color: ShadesOfGrey.grey1, // Background color
+        child: ListView.separated(
+          itemCount: userModel.length,
+          separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
+          itemBuilder: (context, index) {
+            final user = userModel[index]; // Get the user at the current index
+            return buildItemContainer(context, user.name, user); // Display each user's name
+          },
+        ),
       ),
     ),
   );
