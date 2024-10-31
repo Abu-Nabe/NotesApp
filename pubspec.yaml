@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^5.2.0 # Replace with the latest version
   firebase_database: ^11.1.0 # Check for the latest version
   intl_phone_number_input: ^0.7.0
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

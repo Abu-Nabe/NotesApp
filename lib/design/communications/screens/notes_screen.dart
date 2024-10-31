@@ -1,39 +1,35 @@
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
+import 'package:aag_group_services/design/communications/controllers/notes_controller.dart';
+import 'package:aag_group_services/design/communications/model/notes_model.dart';
+import 'package:aag_group_services/firebase/currentUserId.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../extension/convert_time.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
+import '../functions/add_note_firebase.dart';
 
 Widget build_notes_screen(BuildContext context, UserModel receiverModel) {
   final size = MediaQuery.of(context).size;
 
-  final List<String> notes = [
-    "First note",
-    "Second note",
-    "Third note",
-    "This is a longer note to test the layout of the text in the chat view.",
-  ];
-
-  final List<String> from = [
-    "Abu Nabe",
-    "Test Account",
-    "Abu Nabe",
-    "Test Account",
-  ];
-
   return Scaffold(
-    body: Container(
-      width: size.width, // Full width
-      height: size.height, // Full height
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes the TextField to the bottom
-        children: [
-          buildToolbar(context, receiverModel.name),
-          toolbar_shadow_line(context),
-          buildNoteList(context, notes, from),
-          buildTextField(context),
-        ],
+    body: GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Container(
+        width: size.width, // Full width
+        height: size.height, // Full height
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes the TextField to the bottom
+          children: [
+            buildToolbar(context, receiverModel.name),
+            toolbar_shadow_line(context),
+            buildNoteList(context),
+            buildTextField(context, getCurrentUserID(), receiverModel.id, receiverModel.name),
+          ],
+        ),
       ),
     ),
   );
@@ -62,7 +58,8 @@ Widget buildToolbar(BuildContext context, String name) {
   );
 }
 
-Widget buildNoteList(BuildContext context, List<String> notes, List<String> from) {
+Widget buildNoteList(BuildContext context) {
+  List<NotesModel> notes = NotesControllerState.notesList.value;
   return Expanded(
     child: Container(
       color: ShadesOfGrey.grey2,
@@ -94,7 +91,7 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
                   crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
                   children: [
                     Text(
-                      notes[index], // First text: the note itself
+                      notes[index].message, // First text: the note itself
                       style: TextStyle(
                         fontSize: 14, // Mini text size
                         color: Colors.black,
@@ -106,7 +103,7 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'From: ${from[index]}', // Second text: the sender
+                          notes[index].name, // Second text: the sender
                           style: TextStyle(
                             fontSize: 12, // Smaller text size for the sender
                             color: Colors.grey[700], // A lighter color for the sender
@@ -116,7 +113,7 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
                         ),
                         SizedBox(width: 10),
                         Text(
-                          '${from[index]}', // Second text: the sender
+                          formatDateTime(notes[index].createdAt.toString()), // Second text: the sender
                           style: TextStyle(
                             fontSize: 12, // Smaller text size for the sender
                             color: Colors.grey[700], // A lighter color for the sender
@@ -135,11 +132,12 @@ Widget buildNoteList(BuildContext context, List<String> notes, List<String> from
   );
 }
 
-Widget buildTextField(BuildContext context) {
+Widget buildTextField(BuildContext context, String sender, String receiver, String username) {
   return Container(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
     child: TextField(
+      controller: NotesControllerState.noteController.value,
       decoration: InputDecoration(
         hintText: 'Write a note...',
         contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
@@ -156,6 +154,11 @@ Widget buildTextField(BuildContext context) {
           color: ShadesOfPurple.purple_iris, // Set icon color
           onPressed: () {
             // Handle send action
+            String message = NotesControllerState.noteController.value.text;
+            addNoteToDB(sender, receiver, message, username);
+            addFriendNoteToDB(sender, receiver, message, username);
+
+            NotesControllerState.noteController.value.clear();
           },
         ),
       ),
