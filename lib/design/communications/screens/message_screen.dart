@@ -62,6 +62,7 @@ Widget buildToolbar(BuildContext context, String name) {
 
 Widget buildNoteList(BuildContext context) {
   List<NotesModel> notes = MessageControllerState.notesList.value;
+
   return Expanded(
     child: Container(
       color: ShadesOfGrey.grey2,
@@ -71,69 +72,74 @@ Widget buildNoteList(BuildContext context) {
         itemCount: notes.length,
         itemBuilder: (context, index) {
           // Mini texts displayed as individual notes
-          return buildMessageLeftContainer(notes[index]);
+          return buildMessageLeftContainer(context, notes[index]);
         },
       ),
     ),
   );
 }
 
-Widget buildMessageLeftContainer(NotesModel note){
+Widget buildMessageLeftContainer(BuildContext context, NotesModel note) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4), // Space between each note
-    child: Align(
-      alignment: Alignment.centerLeft, // Align notes to the left
-      child: Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8), // Rounded corners
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3), // Position of shadow
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // Position of shadow
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
-          children: [
-            Text(
-              note.message, // First text: the note itself
-              style: TextStyle(
-                fontSize: 14, // Mini text size
-                color: Colors.black,
-                fontWeight: FontWeight.bold, // Makes the note bold
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
+              children: [
+                Text(
+                  note.message, // First text: the note itself
+                  style: TextStyle(
+                    fontSize: 14, // Mini text size
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold, // Makes the note bold
+                  ),
+                ),
+                SizedBox(height: 4), // Add some space between the note and the sender
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      note.name, // Second text: the sender
+                      style: TextStyle(
+                        fontSize: 12, // Smaller text size for the sender
+                        color: Colors.grey[700], // A lighter color for the sender
+                      ),
+                      overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+                      maxLines: 1, // Restrict to a single line
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      formatDateTime(note.createdAt.toString()), // Timestamp
+                      style: TextStyle(
+                        fontSize: 12, // Smaller text size for the sender
+                        color: Colors.grey[700], // A lighter color for the sender
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-            SizedBox(height: 4), // Add some space between the note and the sender
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    note.name, // Second text: the sender
-                    style: TextStyle(
-                      fontSize: 12, // Smaller text size for the sender
-                      color: Colors.grey[700], // A lighter color for the sender
-                    ),
-                    overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
-                    maxLines: 1, // Restrict to a single line
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    formatDateTime(note.createdAt.toString()), // Second text: the sender
-                    style: TextStyle(
-                      fontSize: 12, // Smaller text size for the sender
-                      color: Colors.grey[700], // A lighter color for the sender
-                    ),
-                  ),
-                ]
-            )
-          ],
+          ),
         ),
-      ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.1), // Padding of 50 on the right side
+      ],
     ),
   );
 }
