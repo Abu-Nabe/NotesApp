@@ -3,6 +3,7 @@ import 'package:aag_group_services/design/communications/model/notes_model.dart'
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../../../firebase/user_info.dart';
 import '../screens/message_screen.dart';
 
 class MessageController extends StatefulWidget {
@@ -15,6 +16,7 @@ class MessageController extends StatefulWidget {
 
 class MessageControllerState extends State<MessageController> {
   static ValueNotifier<List<NotesModel>> notesList = ValueNotifier<List<NotesModel>>([]);
+  static ValueNotifier<Map<String, String>> userInfo = ValueNotifier<Map<String, String>>({});
 
   static final ValueNotifier<TextEditingController> noteController =
   ValueNotifier<TextEditingController>(TextEditingController());
@@ -29,9 +31,14 @@ class MessageControllerState extends State<MessageController> {
     noteController.addListener(updateState);
     notesList.addListener(updateState);
 
+    fetchUserDetails();
     fetchNotes();
   }
 
+  Future<void> fetchUserDetails() async {
+    Map<String, String> user = await fetchUserInfo();
+    userInfo.value = user;
+  }
   void fetchNotes() {
     // Listening for changes in the 'notes' node for the specific user and receiver
     database.child('notes').child(currentUserId ?? "").child(widget.receiverModel.id).onValue.listen((event) {
