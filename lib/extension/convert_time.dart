@@ -1,6 +1,9 @@
 import 'package:intl/intl.dart';
 
 String formatDateTime(String dateTimeString) {
+  if(dateTimeString == "0"){
+    return "-";
+  }
   // Parse the original date string into a DateTime object
   DateTime dateTime = DateTime.parse(dateTimeString);
 
