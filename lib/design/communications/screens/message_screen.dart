@@ -1,8 +1,8 @@
+import 'package:aag_group_services/design/communications/controllers/message_controllers.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
-import 'package:aag_group_services/design/communications/controllers/notes_controller.dart';
 import 'package:aag_group_services/design/communications/model/notes_model.dart';
 import 'package:aag_group_services/firebase/currentUserId.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,7 +61,7 @@ Widget buildToolbar(BuildContext context, String name) {
 }
 
 Widget buildNoteList(BuildContext context) {
-  List<NotesModel> notes = NotesControllerState.notesList.value;
+  List<NotesModel> notes = MessageControllerState.notesList.value;
   return Expanded(
     child: Container(
       color: ShadesOfGrey.grey2,
@@ -70,6 +70,7 @@ Widget buildNoteList(BuildContext context) {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the list
         itemCount: notes.length,
         itemBuilder: (context, index) {
+          // Mini texts displayed as individual notes
           return buildMessageLeftContainer(notes[index]);
         },
       ),
@@ -142,7 +143,7 @@ Widget buildTextField(BuildContext context, String sender, String receiver) {
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
     child: TextField(
-      controller: NotesControllerState.noteController.value,
+      controller: MessageControllerState.noteController.value,
       decoration: InputDecoration(
         hintText: 'Send a message',
         contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
