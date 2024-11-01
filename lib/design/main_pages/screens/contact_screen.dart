@@ -1,5 +1,6 @@
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
+import 'package:aag_group_services/design/communications/controllers/message_controllers.dart';
 import 'package:aag_group_services/design/communications/controllers/notes_controller.dart';
 import 'package:aag_group_services/design/navigation/navigation_functions.dart';
 import 'package:flutter/cupertino.dart';
@@ -196,7 +197,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel){
       TextButton(
         onPressed: () {
           // Handle message action here
-          print('Message button clicked');
+          pushWithoutAnimation(context, MessageController(receiverModel: userModel,));
         },
         child: Text(
           'Message',
