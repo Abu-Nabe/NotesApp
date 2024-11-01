@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../extension/convert_time.dart';
+import '../../../firebase/user_info.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
 import '../functions/add_note_firebase.dart';
 
@@ -27,7 +28,7 @@ Widget build_notes_screen(BuildContext context, UserModel receiverModel) {
             buildToolbar(context, receiverModel.name),
             toolbar_shadow_line(context),
             buildNoteList(context),
-            buildTextField(context, getCurrentUserID(), receiverModel.id, receiverModel.name),
+            buildTextField(context, getCurrentUserID(), receiverModel.id),
           ],
         ),
       ),
@@ -132,7 +133,7 @@ Widget buildNoteList(BuildContext context) {
   );
 }
 
-Widget buildTextField(BuildContext context, String sender, String receiver, String username) {
+Widget buildTextField(BuildContext context, String sender, String receiver) {
   return Container(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
@@ -152,11 +153,13 @@ Widget buildTextField(BuildContext context, String sender, String receiver, Stri
         suffixIcon: IconButton(
           icon: Icon(Icons.send),
           color: ShadesOfPurple.purple_iris, // Set icon color
-          onPressed: () {
+          onPressed: () async {
+            Map<String, String> userInfo = await fetchUserInfo();
+
             // Handle send action
             String message = NotesControllerState.noteController.value.text;
-            addNoteToDB(sender, receiver, message, username);
-            addFriendNoteToDB(sender, receiver, message, username);
+            addNoteToDB(sender, receiver, message, userInfo['username'].toString());
+            addFriendNoteToDB(sender, receiver, message, userInfo['username'].toString());
 
             NotesControllerState.noteController.value.clear();
           },

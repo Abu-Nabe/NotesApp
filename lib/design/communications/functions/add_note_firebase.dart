@@ -16,7 +16,8 @@ void addNoteToDB(String sender, String receiver, String message, String username
       .ref()
       .child('notes') // Parent node
       .child(sender) // Current user's UID
-      .child(receiver); // Child is the UID of the user being added
+      .child(receiver) // Child is the UID of the user being added
+      .child(DateTime.now().millisecondsSinceEpoch.toString()); // Unique key based on timestamp
 
   // Write user information to the database
   reference.set(userInfo).then((_) {
@@ -39,7 +40,8 @@ void addFriendNoteToDB(String sender, String receiver, String message, String us
       .ref()
       .child('notes') // Parent node
       .child(receiver) // Current user's UID
-      .child(sender); // Child is the UID of the user being added
+      .child(sender) // Child is the UID of the user being added
+      .child(DateTime.now().millisecondsSinceEpoch.toString());
 
   // Write user information to the database
   reference.set(userInfo).then((_) {

@@ -33,30 +33,36 @@ class NotesControllerState extends State<NotesController> {
   }
 
   void fetchNotes() {
-    // Listening for changes in the 'users' node
+    // Listening for changes in the 'notes' node for the specific user and receiver
     database.child('notes').child(currentUserId ?? "").child(widget.receiverModel.id).onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
-      if (snapshot.exists) {
+      if (snapshot.exists && snapshot.value is Map) {
+        // Convert snapshot data to a Map
         Map<dynamic, dynamic> dataMap = snapshot.value as Map<dynamic, dynamic>;
 
-        // Iterate over each user ID and map each user data to UserModel
-        List<NotesModel> fetchedNotes = [];
-        dataMap.forEach((userId, notesData) {
-          // Make sure to handle the case where userData might not be a Map
-          if (notesData is Map) {
-            fetchedNotes.add(NotesModel.fromMap(userId, Map<String, dynamic>.from(notesData)));
-          }
-        });
+        // Transform each timestamp entry into a NotesModel instance
+        List<NotesModel> fetchedNotes = dataMap.entries.map((entry) {
+          final noteData = entry.value;
+          final timestampKey = entry.key;
 
-        // Update the state with the new user list
+          // Ensure noteData is a Map before converting
+          return noteData is Map
+              ? NotesModel.fromMap(timestampKey, Map<String, dynamic>.from(noteData))
+              : null;
+        }).whereType<NotesModel>().toList();
+
+        // Update the state with the new list of notes
         notesList.value = fetchedNotes; // Update ValueNotifier
+      } else {
+        // Handle case where snapshot is empty or not in expected format
+        notesList.value = [];
+        print('No notes available or data format error.');
       }
     }, onError: (error) {
-      print('Error listening to users: $error');
+      print('Error listening to notes: $error');
     });
   }
-
 
   void updateState(){
     setState(() {});
