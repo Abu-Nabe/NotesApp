@@ -3,17 +3,17 @@ import 'package:aag_group_services/design/communications/model/notes_model.dart'
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/notes_screen.dart';
+import '../screens/message_screen.dart';
 
-class NotesController extends StatefulWidget {
+class MessageController extends StatefulWidget {
   final UserModel receiverModel;
-  const NotesController({Key? key, required this.receiverModel});
+  const MessageController({Key? key, required this.receiverModel});
 
   @override
-  State<NotesController> createState() => NotesControllerState();
+  State<MessageController> createState() => MessageControllerState();
 }
 
-class NotesControllerState extends State<NotesController> {
+class MessageControllerState extends State<MessageController> {
   static ValueNotifier<List<NotesModel>> notesList = ValueNotifier<List<NotesModel>>([]);
 
   static final ValueNotifier<TextEditingController> noteController =
@@ -55,14 +55,12 @@ class NotesControllerState extends State<NotesController> {
           }
         });
 
-        // Sort the notes by timestamp in ascending order
-        fetchedNotes.sort((b, a) => a.createdAt.compareTo(b.createdAt));
-
-        // Update the state with the sorted list of notes
+        // Update the state with the list of notes
         notesList.value = fetchedNotes; // Update ValueNotifier
       } else {
         // Handle case where snapshot is empty or not in expected format
         notesList.value = [];
+        print('No notes available or data format error.');
       }
     }, onError: (error) {
       print('Error listening to notes: $error');
@@ -83,6 +81,6 @@ class NotesControllerState extends State<NotesController> {
 
   @override
   Widget build(BuildContext context) {
-    return build_notes_screen(context, widget.receiverModel);
+    return build_message_screen(context, widget.receiverModel);
   }
 }
