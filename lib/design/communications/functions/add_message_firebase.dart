@@ -1,13 +1,10 @@
-import 'package:aag_group_services/design/communications/model/notes_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import '../../../firebase/currentUserId.dart';
 
 void addSenderMessageToDB(String sender, String receiver, String message, String username){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
-    'sender': sender,
-    'receiver': receiver,
+    'name': username,
     'message': message,
     'created_at': DateTime.now().toString(),
     'seen': false,
@@ -32,8 +29,7 @@ void addSenderMessageToDB(String sender, String receiver, String message, String
 void addReceiverMessageToDB(String sender, String receiver, String message, String username){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
-    'sender': sender,
-    'receiver': receiver,
+    'name': username,
     'message': message,
     'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
     'seen': false,
@@ -58,8 +54,7 @@ void addReceiverMessageToDB(String sender, String receiver, String message, Stri
 void addToMessageList(String sender, String receiver, String message, String username){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
-    'sender': sender,
-    'receiver': receiver,
+    'name': username,
     'message': message,
     'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
     'seen': false,
@@ -83,8 +78,7 @@ void addToMessageList(String sender, String receiver, String message, String use
 void addToFriendMessageList(String sender, String receiver, String message, String username){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
-    'sender': sender,
-    'receiver': receiver,
+    'name': username,
     'message': message,
     'created_at': DateTime.now().toString(),
     'seen': false,
@@ -94,8 +88,8 @@ void addToFriendMessageList(String sender, String receiver, String message, Stri
   DatabaseReference reference = FirebaseDatabase.instance
       .ref()
       .child('messages_list') // Parent node
-      .child(sender) // Current user's UID
-      .child(receiver); // Child is the UID of the user being added
+      .child(receiver) // Current user's UID
+      .child(sender); // Child is the UID of the user being added
 
   // Write user information to the database
   reference.set(userInfo).then((_) {

@@ -1,4 +1,6 @@
-String timeAgo(DateTime dateTime) {
+String timeAgo(String timestamp) {
+  // Convert the timestamp string to an integer and then to a DateTime object
+  final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp));
   final Duration difference = DateTime.now().difference(dateTime);
 
   if (difference.inDays > 8) {

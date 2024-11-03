@@ -1,14 +1,15 @@
 import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
+import 'package:aag_group_services/design/communications/functions/add_message_firebase.dart';
+import 'package:aag_group_services/design/communications/model/messages_model.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
 import 'package:aag_group_services/design/communications/model/notes_model.dart';
 import 'package:aag_group_services/firebase/currentUserId.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../extension/convert_time.dart';
+import '../../../extension/time_ago.dart';
 import '../../../firebase/user_info.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
 
@@ -61,7 +62,7 @@ Widget buildToolbar(BuildContext context, String name) {
 }
 
 Widget buildNoteList(BuildContext context) {
-  List<NotesModel> notes = MessageControllerState.notesList.value;
+  List<MessageModel> notes = MessageControllerState.messagesList.value;
   Map<String, String> userInfo = MessageControllerState.userInfo.value;
 
   return Expanded(
@@ -86,7 +87,7 @@ Widget buildNoteList(BuildContext context) {
   );
 }
 
-Widget buildMessageLeftContainer(BuildContext context, NotesModel note) {
+Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4), // Space between each note
     child: Row(
@@ -133,7 +134,7 @@ Widget buildMessageLeftContainer(BuildContext context, NotesModel note) {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      formatDateTime(note.createdAt.toString()), // Timestamp
+                      timeAgo(note.createdAt.toString()), // Timestamp
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
                         color: Colors.grey[700], // A lighter color for the sender
@@ -151,7 +152,7 @@ Widget buildMessageLeftContainer(BuildContext context, NotesModel note) {
   );
 }
 
-Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
+Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4), // Space between each note
     child: Row(
@@ -199,7 +200,7 @@ Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      formatDateTime(note.createdAt.toString()), // Timestamp
+                      timeAgo(note.createdAt.toString()), // Timestamp
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
                         color: ShadesOfGrey.grey2, // A lighter color for the sender
@@ -237,7 +238,17 @@ Widget buildTextField(BuildContext context, String sender, String receiver) {
           icon: Icon(Icons.send),
           color: ShadesOfPurple.purple_iris, // Set icon color
           onPressed: () async {
+            Map<String, String> userInfo = await fetchUserInfo();
 
+            // Handle send action
+            String message = MessageControllerState.noteController.value.text;
+            addSenderMessageToDB(sender, receiver, message, userInfo['username'].toString());
+            addReceiverMessageToDB(sender, receiver, message, userInfo['username'].toString());
+
+            addToMessageList(sender, receiver, message, userInfo['username'].toString());
+            addToFriendMessageList(sender, receiver, message, userInfo['username'].toString());
+
+            MessageControllerState.noteController.value.clear();
           },
         ),
       ),
