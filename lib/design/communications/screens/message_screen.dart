@@ -1,4 +1,4 @@
-import 'package:aag_group_services/design/communications/controllers/message_controllers.dart';
+import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:aag_group_services/consts/colors.dart';
@@ -162,7 +162,7 @@ Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
           child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: ShadesOfPurple.purple_iris,
               borderRadius: BorderRadius.circular(8), // Rounded corners
               boxShadow: [
                 BoxShadow(
@@ -180,7 +180,7 @@ Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
                   note.message, // First text: the note itself
                   style: TextStyle(
                     fontSize: 14, // Mini text size
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold, // Makes the note bold
                   ),
                 ),
@@ -192,7 +192,7 @@ Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
                       note.name, // Second text: the sender
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: Colors.grey[700], // A lighter color for the sender
+                        color: ShadesOfGrey.grey2, // A lighter color for the sender
                       ),
                       overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
                       maxLines: 1, // Restrict to a single line
@@ -202,7 +202,7 @@ Widget buildMessageRightContainer(BuildContext context, NotesModel note) {
                       formatDateTime(note.createdAt.toString()), // Timestamp
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: Colors.grey[700], // A lighter color for the sender
+                        color: ShadesOfGrey.grey2, // A lighter color for the sender
                       ),
                     ),
                   ],
