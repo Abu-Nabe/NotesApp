@@ -1,5 +1,5 @@
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
-import 'package:aag_group_services/design/communications/model/notes_model.dart';
+import 'package:aag_group_services/design/communications/model/messages_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class MessageController extends StatefulWidget {
 }
 
 class MessageControllerState extends State<MessageController> {
-  static ValueNotifier<List<NotesModel>> notesList = ValueNotifier<List<NotesModel>>([]);
+  static ValueNotifier<List<MessageModel>> messagesList = ValueNotifier<List<MessageModel>>([]);
   static ValueNotifier<Map<String, String>> userInfo = ValueNotifier<Map<String, String>>({});
 
   static final ValueNotifier<TextEditingController> noteController =
@@ -29,7 +29,7 @@ class MessageControllerState extends State<MessageController> {
     super.initState();
     // Additional initialization logic if needed
     noteController.addListener(updateState);
-    notesList.addListener(updateState);
+    messagesList.addListener(updateState);
 
     fetchUserDetails();
     fetchNotes();
@@ -41,7 +41,7 @@ class MessageControllerState extends State<MessageController> {
   }
   void fetchNotes() {
     // Listening for changes in the 'notes' node for the specific user and receiver
-    database.child('notes').child(currentUserId ?? "").child(widget.receiverModel.id).onValue.listen((event) {
+    database.child('messages').child(currentUserId ?? "").child(widget.receiverModel.id).onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists && snapshot.value is Map) {
@@ -49,25 +49,24 @@ class MessageControllerState extends State<MessageController> {
         Map<dynamic, dynamic> userNotesMap = snapshot.value as Map<dynamic, dynamic>;
 
         // Collecting all notes for each timestamp in the user's notes
-        List<NotesModel> fetchedNotes = [];
+        List<MessageModel> fetchedNotes = [];
 
         userNotesMap.forEach((timestampKey, noteData) {
           // Check if noteData is structured as expected with timestamp keys
           if (noteData is Map) {
             noteData.forEach((timeKey, details) {
               if (details is Map) {
-                fetchedNotes.add(NotesModel.fromMap(timeKey, Map<String, dynamic>.from(details)));
+                fetchedNotes.add(MessageModel.fromMap(timeKey, Map<String, dynamic>.from(details)));
               }
             });
           }
         });
 
         // Update the state with the list of notes
-        notesList.value = fetchedNotes; // Update ValueNotifier
+        messagesList.value = fetchedNotes; // Update ValueNotifier
       } else {
         // Handle case where snapshot is empty or not in expected format
-        notesList.value = [];
-        print('No notes available or data format error.');
+        messagesList.value = [];
       }
     }, onError: (error) {
       print('Error listening to notes: $error');
@@ -81,7 +80,7 @@ class MessageControllerState extends State<MessageController> {
   @override
   void dispose() {
     noteController.removeListener(updateState);
-    notesList.removeListener(updateState);
+    messagesList.removeListener(updateState);
 
     super.dispose();
   }
