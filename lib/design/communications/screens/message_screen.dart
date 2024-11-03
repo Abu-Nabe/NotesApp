@@ -43,6 +43,7 @@ Widget buildToolbar(BuildContext context, String name) {
     leading: IconButton(
       icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
       onPressed: () {
+        MessageControllerState.messagesList.value = [];
         Navigator.pop(context); // Navigates back to the previous screen
       },
     ),

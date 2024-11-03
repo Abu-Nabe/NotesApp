@@ -61,6 +61,7 @@ class MessageControllerState extends State<MessageController> {
             });
           }
         });
+        fetchedNotes.sort((b, a) => a.createdAt.compareTo(b.createdAt));
 
         // Update the state with the list of notes
         messagesList.value = fetchedNotes; // Update ValueNotifier
