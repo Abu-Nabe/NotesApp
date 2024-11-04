@@ -51,13 +51,13 @@ void addReceiverMessageToDB(String sender, String receiver, String message, Stri
   });
 }
 
-void addToMessageList(String sender, String receiver, String message, String username){
+void addToMessageList(String sender, String receiver, String message, String username, String receiverName){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
-    'name': username,
+    'name': receiverName,
     'message': message,
     'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
-    'seen': false,
+    'seen': true,
   };
 
   // Reference to the Firebase Realtime Database
@@ -75,7 +75,7 @@ void addToMessageList(String sender, String receiver, String message, String use
   });
 }
 
-void addToFriendMessageList(String sender, String receiver, String message, String username){
+void addToFriendMessageList(String sender, String receiver, String message, String username, String receiverName){
   // Create a map for the user information to be added
   Map<String, dynamic> userInfo = {
     'name': username,

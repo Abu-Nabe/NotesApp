@@ -18,8 +18,7 @@ class MessageControllerState extends State<MessageController> {
   static ValueNotifier<List<MessageModel>> messagesList = ValueNotifier<List<MessageModel>>([]);
   static ValueNotifier<Map<String, String>> userInfo = ValueNotifier<Map<String, String>>({});
 
-  static final ValueNotifier<TextEditingController> noteController =
-  ValueNotifier<TextEditingController>(TextEditingController());
+  static final ValueNotifier<TextEditingController> noteController = ValueNotifier<TextEditingController>(TextEditingController());
 
   final database = FirebaseDatabase.instance.ref();
   String? currentUserId;
