@@ -30,7 +30,7 @@ Widget build_message_screen(BuildContext context, UserModel receiverModel) {
             buildToolbar(context, receiverModel.name),
             toolbar_shadow_line(context),
             buildNoteList(context),
-            buildTextField(context, getCurrentUserID(), receiverModel.id),
+            buildTextField(context, getCurrentUserID(), receiverModel.id, receiverModel.name),
           ],
         ),
       ),
@@ -218,7 +218,7 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
   );
 }
 
-Widget buildTextField(BuildContext context, String sender, String receiver) {
+Widget buildTextField(BuildContext context, String sender, String receiver, String receiverName) {
   return Container(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
@@ -246,8 +246,8 @@ Widget buildTextField(BuildContext context, String sender, String receiver) {
             addSenderMessageToDB(sender, receiver, message, userInfo['username'].toString());
             addReceiverMessageToDB(sender, receiver, message, userInfo['username'].toString());
 
-            addToMessageList(sender, receiver, message, userInfo['username'].toString());
-            addToFriendMessageList(sender, receiver, message, userInfo['username'].toString());
+            addToMessageList(sender, receiver, message, userInfo['username'].toString(), receiverName);
+            addToFriendMessageList(sender, receiver, message, userInfo['username'].toString(), receiverName);
 
             MessageControllerState.noteController.value.clear();
           },
