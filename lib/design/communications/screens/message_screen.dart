@@ -1,6 +1,7 @@
 import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
 import 'package:aag_group_services/design/communications/functions/add_message_firebase.dart';
 import 'package:aag_group_services/design/communications/model/messages_model.dart';
+import 'package:aag_group_services/design/main_pages/controllers/chat.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:aag_group_services/consts/colors.dart';

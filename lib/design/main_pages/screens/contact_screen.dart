@@ -157,7 +157,7 @@ Widget buildItemContainer(BuildContext context, String name, UserModel userModel
             Text(
               name,
               style: TextStyle(
-                fontSize: 18, // Font size for the name
+                fontSize: 16, // Font size for the name
                 fontWeight: FontWeight.bold, // Bold text
                 color: ShadesOfGrey.grey5,
               ),
