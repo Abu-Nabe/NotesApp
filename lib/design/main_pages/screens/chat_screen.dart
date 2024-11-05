@@ -41,10 +41,12 @@ Widget build_chat_screen(BuildContext context) {
     ),
   );
 }
+
 Widget searchField() {
   TextEditingController controller = ChatPageState.searchController.value;
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding for the search bar
+    padding: const EdgeInsets.symmetric(
+        horizontal: 16, vertical: 8), // Padding for the search bar
     child: TextField(
       controller: controller, // Controller for managing text input
       decoration: InputDecoration(
@@ -58,19 +60,20 @@ Widget searchField() {
         prefixIcon: Icon(Icons.search), // Search icon
         suffixIcon: ChatPageState.searchMode.value
             ? IconButton(
-          icon: Icon(Icons.clear), // Clear icon
-          onPressed: () {
-            controller.clear(); // Clear the text
-            ChatPageState.searchText.value = "";
-            ChatPageState.searchMode.value = false;
-          },
-        ) : null,
+                icon: Icon(Icons.clear), // Clear icon
+                onPressed: () {
+                  controller.clear(); // Clear the text
+                  ChatPageState.searchText.value = "";
+                  ChatPageState.searchMode.value = false;
+                },
+              )
+            : null,
       ),
       onChanged: (text) {
         ChatPageState.searchText.value = text;
-        if(text.toString().trim() == ""){
+        if (text.toString().trim() == "") {
           ChatPageState.searchMode.value = false;
-        }else{
+        } else {
           ChatPageState.searchMode.value = true;
         }
       },
@@ -78,8 +81,7 @@ Widget searchField() {
   );
 }
 
-
-Widget shadowLine(){
+Widget shadowLine() {
   return Container(
     height: 1, // Height of the shadow line
     width: double.infinity, // Full width
@@ -102,7 +104,7 @@ Widget listContainer(BuildContext context) {
       : ChatPageState.messagesList.value;
 
   return Expanded(
-    child:  GestureDetector(
+    child: GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); // Dismiss keyboard on tap
       },
@@ -110,10 +112,12 @@ Widget listContainer(BuildContext context) {
         color: ShadesOfGrey.grey1, // Background color
         child: ListView.separated(
           itemCount: itemModel.length,
-          separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
+          separatorBuilder: (context, index) => Divider(
+              color: ShadesOfGrey.grey2, height: 1), // Divider between items
           itemBuilder: (context, index) {
             final item = itemModel[index]; // Get the user at the current index
-            return buildItemContainer(context, item); // Display each user's name
+            return buildItemContainer(
+                context, item); // Display each user's name
           },
         ),
       ),
@@ -123,15 +127,19 @@ Widget listContainer(BuildContext context) {
 
 Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
+    padding: EdgeInsets.symmetric(
+        horizontal: 16, vertical: 8), // Padding around the container
     decoration: BoxDecoration(
       color: !itemModel.seen ? ShadesOfGrey.grey2 : null,
       border: Border(
-        bottom: BorderSide(color: Colors.grey[300]!, width: 1), // Optional bottom border for separation
+        bottom: BorderSide(
+            color: Colors.grey[300]!,
+            width: 1), // Optional bottom border for separation
       ),
     ),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children across the row
+      mainAxisAlignment:
+          MainAxisAlignment.spaceBetween, // Aligns children across the row
       children: [
         // Icon and name section
         Row(
@@ -142,7 +150,9 @@ Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
               height: 40, // Height of the circular container
               decoration: BoxDecoration(
                 shape: BoxShape.circle, // Makes the container circular
-                border: Border.all(color: ShadesOfGrey.grey3, width: 2), // Border color and width
+                border: Border.all(
+                    color: ShadesOfGrey.grey3,
+                    width: 2), // Border color and width
                 color: Colors.white, // Background color of the circular icon
               ),
               child: Icon(
@@ -171,9 +181,11 @@ Widget buildTextLabels(BuildContext context, MessageModel itemModel) {
   }
 
   return Container(
-    width: MediaQuery.of(context).size.width * 0.4, // Limits width to 60% of screen width
+    width: MediaQuery.of(context).size.width *
+        0.4, // Limits width to 60% of screen width
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Aligns children at the start of the cross-axis
+      crossAxisAlignment: CrossAxisAlignment
+          .start, // Aligns children at the start of the cross-axis
       children: [
         Text(
           itemModel.name,
@@ -187,17 +199,20 @@ Widget buildTextLabels(BuildContext context, MessageModel itemModel) {
         ),
         Row(
           children: [
-            Icon(
-              Icons.check, // Checkmark icon
-              color: Colors.purple, // Purple color for the checkmark
-              size: 16, // Size of the checkmark
-            ),
-            SizedBox(width: 4), // Small spacing between the icon and the text
+            // Conditional rendering based on the seen variable
+            seen
+                ? Icon(Icons.check, // Checkmark icon
+                    color: Colors.purple, // Purple color for the checkmark
+                    size: 16)
+                : SizedBox.shrink(),
+            seen
+                ? SizedBox(width: 4) // Small spacing between the icon and the text
+                : SizedBox.shrink(),
             Expanded(
               child: Text(
                 itemModel.message,
                 style: TextStyle(
-                  fontSize: 16, // Font size for the name
+                  fontSize: 16, // Font size for the message
                   fontWeight: FontWeight.w500, // Medium text weight
                   color: ShadesOfGrey.grey4,
                 ),
@@ -212,7 +227,7 @@ Widget buildTextLabels(BuildContext context, MessageModel itemModel) {
   );
 }
 
-Widget buildRightTimeAgoLabel(BuildContext context, MessageModel itemModel){
+Widget buildRightTimeAgoLabel(BuildContext context, MessageModel itemModel) {
   return Text(
     timeAgo(itemModel.createdAt),
     style: TextStyle(
@@ -222,5 +237,3 @@ Widget buildRightTimeAgoLabel(BuildContext context, MessageModel itemModel){
     ),
   );
 }
-
-
