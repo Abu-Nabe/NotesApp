@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import '../../../firebase/currentUserId.dart';
+import '../../communications/functions/message_seen_validity.dart';
 import '../../communications/model/messages_model.dart';
 import '../screens/chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class ChatPage extends StatefulWidget {
 class ChatPageState extends State<ChatPage> {
   static ValueNotifier<List<MessageModel>> messagesList = ValueNotifier<List<MessageModel>>([]);
   static ValueNotifier<List<MessageModel>> searchList = ValueNotifier<List<MessageModel>>([]);
+
+  static ValueNotifier<Map<String, bool>> seenList = ValueNotifier<Map<String, bool>>({});
 
   static ValueNotifier<String> searchText = ValueNotifier<String>('');
   static ValueNotifier<TextEditingController> searchController = ValueNotifier<TextEditingController>(TextEditingController());
@@ -32,6 +35,7 @@ class ChatPageState extends State<ChatPage> {
     messagesList.addListener(updateValue);
     searchList.addListener(updateValue);
     searchMode.addListener(updateValue);
+    seenList.addListener(updateValue);
 
     searchText.addListener(searchUsers);
 
@@ -47,6 +51,7 @@ class ChatPageState extends State<ChatPage> {
     messagesList.removeListener(updateValue);
     searchList.removeListener(updateValue);
     searchMode.removeListener(updateValue);
+    seenList.removeListener(updateValue);
 
     searchText.removeListener(searchUsers);
 
@@ -66,23 +71,33 @@ class ChatPageState extends State<ChatPage> {
   }
 
   void fetchList() {
-    database.child('messages_list').child(currentUserId ?? "").onValue.listen((event) {
+    final database = FirebaseDatabase.instance.ref();
+
+    database.child('messages_list').child(currentUserId ?? "").onValue.listen((event) async {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists && snapshot.value is Map) {
         Map<dynamic, dynamic> itemsMap = snapshot.value as Map<dynamic, dynamic>;
 
         List<MessageModel> fetchedItems = [];
+        Map<String, bool> newSeenList = {};
 
-        itemsMap.forEach((messageId, messageData) {
-          if (messageData is Map) {
-            fetchedItems.add(MessageModel.fromMap(messageId, Map<String, dynamic>.from(messageData)));
+        for (var entry in itemsMap.entries) {
+          if (entry.value is Map) {
+            fetchedItems.add(MessageModel.fromMap(entry.key, Map<String, dynamic>.from(entry.value)));
+
+            // Check 'seen' status for each message
+            String receiver = entry.key;
+            Map<String, bool> seenStatus = await checkSeen(currentUserId ?? "", receiver);
+            newSeenList.addAll(seenStatus);
           }
-        });
+        }
 
         fetchedItems.sort((b, a) => a.createdAt.compareTo(b.createdAt));
-
         messagesList.value = fetchedItems;
+
+        // Update the seenList ValueNotifier
+        ChatPageState.seenList.value = newSeenList;
       } else {
         messagesList.value = [];
       }

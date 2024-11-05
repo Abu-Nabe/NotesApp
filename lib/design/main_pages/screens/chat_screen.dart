@@ -162,29 +162,53 @@ Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
   );
 }
 
-Widget buildTextLabels(BuildContext context, MessageModel itemModel){
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start, // Aligns children at the start of the cross-axis
-    children: [
-      Text(
-        itemModel.name,
-        style: TextStyle(
-          fontSize: 16, // Font size for the name
-          fontWeight: FontWeight.bold, // Bold text
-          color: ShadesOfGrey.grey5,
+Widget buildTextLabels(BuildContext context, MessageModel itemModel) {
+  Map<String, bool> seenMap = ChatPageState.seenList.value;
+  var seen = false;
+
+  if (seenMap.containsKey(itemModel.id) && seenMap[itemModel.id] == true) {
+    seen = true;
+  }
+
+  return Container(
+    width: MediaQuery.of(context).size.width * 0.4, // Limits width to 60% of screen width
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Aligns children at the start of the cross-axis
+      children: [
+        Text(
+          itemModel.name,
+          style: TextStyle(
+            fontSize: 16, // Font size for the name
+            fontWeight: FontWeight.bold, // Bold text
+            color: ShadesOfGrey.grey5,
+          ),
+          overflow: TextOverflow.ellipsis, // Adds ellipsis if the text overflows
+          maxLines: 1, // Limits the text to a single line
         ),
-      ),
-      Text(
-        itemModel.message,
-        style: TextStyle(
-          fontSize: 16, // Font size for the name
-          fontWeight: FontWeight.w500, // Bold text
-          color: ShadesOfGrey.grey4,
+        Row(
+          children: [
+            Icon(
+              Icons.check, // Checkmark icon
+              color: Colors.purple, // Purple color for the checkmark
+              size: 16, // Size of the checkmark
+            ),
+            SizedBox(width: 4), // Small spacing between the icon and the text
+            Expanded(
+              child: Text(
+                itemModel.message,
+                style: TextStyle(
+                  fontSize: 16, // Font size for the name
+                  fontWeight: FontWeight.w500, // Medium text weight
+                  color: ShadesOfGrey.grey4,
+                ),
+                overflow: TextOverflow.ellipsis, // Adds ellipsis if the text overflows
+                maxLines: 1, // Limits the text to a single line
+              ),
+            ),
+          ],
         ),
-        overflow: TextOverflow.ellipsis, // Adds ellipsis if the text overflows
-        maxLines: 1, // Limits the text to a single line
-      ),
-    ],
+      ],
+    ),
   );
 }
 
