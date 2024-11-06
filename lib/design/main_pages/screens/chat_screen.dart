@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import '../../../extension/time_ago.dart';
 import '../../../firebase/add_friend_firebase.dart';
+import '../../../firebase/user_info.dart';
 import '../controllers/chat.dart';
 import '../controllers/contact.dart';
 import '../functions/contact_functions/check_friends.dart';
@@ -126,51 +127,60 @@ Widget listContainer(BuildContext context) {
 }
 
 Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
-  return Container(
-    padding: EdgeInsets.symmetric(
-        horizontal: 16, vertical: 8), // Padding around the container
-    decoration: BoxDecoration(
-      color: !itemModel.seen ? ShadesOfGrey.grey2 : null,
-      border: Border(
-        bottom: BorderSide(
+  return GestureDetector(
+    onTap: () async {
+      UserModel? userModel = await fetchUserInfoToModel(itemModel.id);
+      if(userModel != null){
+        pushWithoutAnimation(context, MessageController(receiverModel: userModel,));
+      }
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: !itemModel.seen ? ShadesOfGrey.grey2 : null,
+        border: Border(
+          bottom: BorderSide(
             color: Colors.grey[300]!,
-            width: 1), // Optional bottom border for separation
-      ),
-    ),
-    child: Row(
-      mainAxisAlignment:
-          MainAxisAlignment.spaceBetween, // Aligns children across the row
-      children: [
-        // Icon and name section
-        Row(
-          children: [
-            // Circular icon with border
-            Container(
-              width: 40, // Width of the circular container
-              height: 40, // Height of the circular container
-              decoration: BoxDecoration(
-                shape: BoxShape.circle, // Makes the container circular
-                border: Border.all(
-                    color: ShadesOfGrey.grey3,
-                    width: 2), // Border color and width
-                color: Colors.white, // Background color of the circular icon
-              ),
-              child: Icon(
-                Icons.person,
-                size: 24, // Size of the icon inside the circular container
-                color: ShadesOfGrey.grey3, // Icon color
-              ),
-            ),
-            SizedBox(width: 10), // Space between icon and name
-            buildTextLabels(context, itemModel),
-          ],
+            width: 1,
+          ),
         ),
-        SizedBox(width: 10), // Space between icon and name
-        buildRightTimeAgoLabel(context, itemModel),
-      ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Icon and name section
+          Row(
+            children: [
+              // Circular icon with border
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: ShadesOfGrey.grey3,
+                    width: 2,
+                  ),
+                  color: Colors.white,
+                ),
+                child: Icon(
+                  Icons.person,
+                  size: 24,
+                  color: ShadesOfGrey.grey3,
+                ),
+              ),
+              SizedBox(width: 10),
+              buildTextLabels(context, itemModel),
+            ],
+          ),
+          SizedBox(width: 10),
+          buildRightTimeAgoLabel(context, itemModel),
+        ],
+      ),
     ),
   );
 }
+
 
 Widget buildTextLabels(BuildContext context, MessageModel itemModel) {
   Map<String, bool> seenMap = ChatPageState.seenList.value;
