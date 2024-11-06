@@ -49,8 +49,8 @@ class ContactsPageState extends State<ContactsPage> {
     searchMode.removeListener(updateValue);
 
     searchText.removeListener(searchUsers);
-
     updatePage.removeListener(updateValue);
+
     super.dispose();
   }
 
