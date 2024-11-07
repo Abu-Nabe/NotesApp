@@ -1,9 +1,13 @@
+import 'package:aag_group_services/design/authentication_pages/login_controller.dart';
 import 'package:aag_group_services/design/main_pages/controllers/settings.dart';
+import 'package:aag_group_services/firebase/sign_out.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../consts/colors.dart';
 import '../../../firebase/user_info.dart';
+import '../../communications/controllers/message_controller.dart';
+import '../../navigation/navigation_functions.dart';
 
 Widget build_settings_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -31,6 +35,19 @@ Widget build_settings_screen(BuildContext context) {
             shadowLine(),
             SizedBox(height: 1), // Optional spacing between items
             buildProfileContainer(),
+            buildSettingsList("Change Profile", Icons.person, () {
+
+              },
+            ),
+            buildSettingsList("Terms Of Service", Icons.description, () {
+
+              },
+            ),
+            buildSettingsList("Log Out", Icons.exit_to_app, () {
+                signOut();
+                pushWithoutAnimation(context, LoginController());
+              },
+            ),
           ],
         ),
       ),
@@ -100,3 +117,37 @@ Widget buildProfileLabel(){
     ),
   );
 }
+
+Widget buildSettingsList(String text, IconData icon, VoidCallback onTap) {
+  return GestureDetector(
+    onTap: onTap, // Callback for handling tap events
+    child: Container(
+      width: double.infinity, // Full width of the container
+      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0), // Padding around the content
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey[300]!, width: 1.0)), // Bottom border
+      ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: ShadesOfGrey.grey3, // Color for the icon
+            size: 24.0, // Icon size
+          ),
+          SizedBox(width: 16.0), // Space between icon and text
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 16.0, // Font size for the text
+                fontWeight: FontWeight.w500, // Medium weight text
+                color: Colors.black87, // Text color
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+

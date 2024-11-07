@@ -22,6 +22,7 @@ class ShadesOfGrey {
   static const Color grey3 = Color(0xFFB0B0B0); // Grey
   static const Color grey4 = Color(0xFF808080); // Medium grey
   static const Color grey5 = Color(0xFF404040); // Dark grey
+  static const Color grey_common = Color(0xFFe3e3e3); // Dark grey
 }
 
 class ShadesOfRed {
