@@ -22,15 +22,8 @@ Future<void> setSeen(String sender, String receiver) async {
 
   final snapshot = await messageRef.get();
 
-  if (snapshot.exists && snapshot.value is Map) {
-    Map<dynamic, dynamic> itemsMap = Map<dynamic, dynamic>.from(snapshot.value as Map);
-
-    // Loop through the items to update `seen` to true
-    for (var key in itemsMap.keys) {
-      if (itemsMap[key] is Map && itemsMap[key].containsKey('seen')) {
-        // Update each 'seen' field to true
-        await messageRef.child(key).update({'seen': true});
-      }
-    }
+  if (snapshot.exists && snapshot.value is Map && (snapshot.value as Map).containsKey('seen')) {
+    // Update the 'seen' field to true
+    await messageRef.update({'seen': true});
   }
 }

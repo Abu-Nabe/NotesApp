@@ -110,7 +110,7 @@ class ChatPageState extends State<ChatPage> {
     String search = searchText.value.toLowerCase(); // Convert search text to lowercase for case-insensitive matching
 
     // Listen for changes in the 'users' node
-    database.child('users').onValue.listen((event) {
+    database.child('messages_list').child(currentUserId ?? "").onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists) {
