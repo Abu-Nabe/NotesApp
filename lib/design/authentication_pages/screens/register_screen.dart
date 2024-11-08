@@ -7,6 +7,7 @@ import '../../../consts/strings/authentication_strings/authentication_strings.da
 import '../../../firebase/create_account.dart';
 import '../../bottom_navigation.dart';
 import '../../navigation/navigation_functions.dart';
+import '../../settings/controllers/terms_of_services_controller.dart';
 import '../functions/register_type.dart';
 import '../login_controller.dart';
 
@@ -80,6 +81,8 @@ Widget build_container(BuildContext context, FirebaseAuth auth) {
             inputField(authDetails, registerFirstName),
             const SizedBox(height: 20),
             inputField(authDetails, registerLastName),
+            const SizedBox(height: 20),
+            verifyLabel(context),
             const SizedBox(height: 20),
             buildRegisterButton(context,auth, authDetails),
             if (authDetails[registerError] != null && authDetails[registerError].isNotEmpty)
@@ -208,6 +211,31 @@ Widget buildRegisterButton(BuildContext context,FirebaseAuth auth, Map<String, d
         fontSize: 16,
         color: Colors.white, // Set text color
         fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
+
+Widget verifyLabel(BuildContext context) {
+  Color errorColor = ShadesOfGrey.grey4;
+
+  return InkWell(
+    onTap: () {
+      showTermsDialog(context);
+    },
+    splashColor: Colors.blue.withOpacity(0.3), // Splash color when tapped
+    highlightColor: Colors.blue.withOpacity(0.1), // Highlight color when long-pressed
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0), // Padding for left and right
+      child: Text(
+        "By creating an account, you agree with the terms and services",
+        style: TextStyle(
+          fontSize: 13,
+          color: errorColor, // Set text color
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline, // Make the text underlined to indicate it's clickable
+        ),
+        textAlign: TextAlign.center, // Center the text within its container
       ),
     ),
   );
