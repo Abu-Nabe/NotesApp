@@ -8,6 +8,7 @@ import '../../../consts/colors.dart';
 import '../../../firebase/user_info.dart';
 import '../../communications/controllers/message_controller.dart';
 import '../../navigation/navigation_functions.dart';
+import '../dialogs/settings_bottom_sheet.dart';
 
 Widget build_settings_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -36,7 +37,7 @@ Widget build_settings_screen(BuildContext context) {
             SizedBox(height: 1), // Optional spacing between items
             buildProfileContainer(),
             buildSettingsList("Change Profile", Icons.person, () {
-
+              showProfileOptionsDialog(context);
               },
             ),
             buildSettingsList("Terms Of Service", Icons.description, () {
