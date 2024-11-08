@@ -8,6 +8,7 @@ import '../../../consts/colors.dart';
 import '../../../firebase/user_info.dart';
 import '../../communications/controllers/message_controller.dart';
 import '../../navigation/navigation_functions.dart';
+import '../../settings/controllers/terms_of_services_controller.dart';
 import '../dialogs/settings_bottom_sheet.dart';
 
 Widget build_settings_screen(BuildContext context) {
@@ -36,12 +37,12 @@ Widget build_settings_screen(BuildContext context) {
             shadowLine(),
             SizedBox(height: 1), // Optional spacing between items
             buildProfileContainer(),
-            buildSettingsList("Change Profile", Icons.person, () {
-              showProfileOptionsDialog(context);
-              },
-            ),
+            // buildSettingsList("Change Profile", Icons.person, () {
+            //   showProfileOptionsDialog(context);
+            //   },
+            // ),
             buildSettingsList("Terms Of Service", Icons.description, () {
-
+              showTermsDialog(context);
               },
             ),
             buildSettingsList("Log Out", Icons.exit_to_app, () {
