@@ -24,7 +24,7 @@ Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<Stri
   Map<String, dynamic> userInfo = {
     'name': groupName,
     'message': 'You started a new group.',
-    'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+    'created_at': DateTime.now().millisecondsSinceEpoch.toInt(),
     'seen': true,
     'is_group': true,
   };
@@ -45,7 +45,7 @@ Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<Stri
   Map<String, dynamic> groupInfo = {
     'id': info['id'],
     'name': info['name'],
-    'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+    'created_at': DateTime.now().millisecondsSinceEpoch.toInt(),
     'host': true,
   };
 
@@ -80,7 +80,7 @@ Future<void> addToGroupMessageList(List<UserModel> selectedUsersList, Map<String
     Map<String, dynamic> groupInfo = {
       'id': user.id,
       'name': user.name,
-      'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+      'created_at': DateTime.now().millisecondsSinceEpoch.toInt(),
       'host': false,
     };
 

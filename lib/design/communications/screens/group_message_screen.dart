@@ -1,3 +1,4 @@
+import 'package:aag_group_services/design/communications/controllers/group_members_controller.dart';
 import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
 import 'package:aag_group_services/design/communications/functions/add_message_firebase.dart';
 import 'package:aag_group_services/design/communications/model/messages_model.dart';
@@ -13,6 +14,8 @@ import 'package:flutter/material.dart';
 import '../../../extension/time_ago.dart';
 import '../../../firebase/user_info.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
+import '../../navigation/navigation_functions.dart';
+import '../controllers/notes_controller.dart';
 
 Widget build_group_message_screen(
     BuildContext context, MessageModel messageModel) {
@@ -30,7 +33,7 @@ Widget build_group_message_screen(
           mainAxisAlignment: MainAxisAlignment
               .spaceBetween, // Pushes the TextField to the bottom
           children: [
-            buildToolbar(context, messageModel.name),
+            buildToolbar(context, messageModel.name, messageModel.id),
             toolbar_shadow_line(context),
             buildNoteList(context),
             buildTextField(context, getCurrentUserID(), messageModel.id,
@@ -42,7 +45,7 @@ Widget build_group_message_screen(
   );
 }
 
-Widget buildToolbar(BuildContext context, String name) {
+Widget buildToolbar(BuildContext context, String name, String groupID) {
   return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
@@ -69,6 +72,7 @@ Widget buildToolbar(BuildContext context, String name) {
           icon: Icon(Icons.group, color: Colors.black), // Right icon #1
           onPressed: () {
             // Define action for the search icon
+            pushWithoutAnimation(context, GroupMemberController( groupID: groupID));
           },
         ),
       ]
