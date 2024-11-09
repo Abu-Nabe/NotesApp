@@ -4,6 +4,7 @@ class MessageModel {
   final String message;
   final String createdAt;
   final bool seen;
+  final bool isGroup;
 
   MessageModel({
     required this.id,
@@ -11,6 +12,7 @@ class MessageModel {
     required this.message,
     required this.createdAt,
     required this.seen,
+    required this.isGroup,
   });
 
   // Factory constructor with `id` as a separate parameter
@@ -21,6 +23,7 @@ class MessageModel {
       message: data['message'] ?? 'No Message',
       createdAt: data['created_at'] ?? "0",
       seen: data['seen'] ?? false,
+      isGroup: data['is_group'] ?? false,
     );
   }
 
@@ -32,6 +35,7 @@ class MessageModel {
       'email': message,
       'created_at': createdAt,
       'seen': seen,
+      'is_group': isGroup
     };
   }
 }
