@@ -131,48 +131,58 @@ Widget listContainer(BuildContext context) {
 }
 
 Widget buildItemContainer(BuildContext context, String name, UserModel userModel) {
-  bool user_type = false;
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(color: Colors.grey[300]!, width: 1), // Optional bottom border for separation
-      ),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children across the row
-      children: [
-        // Icon and name section
-        Row(
-          children: [
-            // Circular icon with border
-            Container(
-              width: 40, // Width of the circular container
-              height: 40, // Height of the circular container
-              decoration: BoxDecoration(
-                shape: BoxShape.circle, // Makes the container circular
-                border: Border.all(color: ShadesOfGrey.grey3, width: 2), // Border color and width
-                color: Colors.white, // Background color of the circular icon
-              ),
-              child: Icon(
-                Icons.person,
-                size: 24, // Size of the icon inside the circular container
-                color: ShadesOfGrey.grey3, // Icon color
-              ),
-            ),
-            SizedBox(width: 10), // Space between icon and name
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 16, // Font size for the name
-                fontWeight: FontWeight.bold, // Bold text
-                color: ShadesOfGrey.grey5,
-              ),
-            ),
-          ],
+  return GestureDetector(
+    onTap: () {
+      if (CreateGroupControllerState.selectedUsers.value.contains(userModel.id)) {
+        // If user ID exists, remove it
+        CreateGroupControllerState.selectedUsers.value = List.from(CreateGroupControllerState.selectedUsers.value)..remove(userModel.id);
+      } else {
+        // If user ID does not exist, add it
+        CreateGroupControllerState.selectedUsers.value = List.from(CreateGroupControllerState.selectedUsers.value)..add(userModel.id);
+      }
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[300]!, width: 1), // Optional bottom border for separation
         ),
-        buildRightItemContainer(context, userModel),
-      ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children across the row
+        children: [
+          // Icon and name section
+          Row(
+            children: [
+              // Circular icon with border
+              Container(
+                width: 40, // Width of the circular container
+                height: 40, // Height of the circular container
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle, // Makes the container circular
+                  border: Border.all(color: ShadesOfGrey.grey3, width: 2), // Border color and width
+                  color: Colors.white, // Background color of the circular icon
+                ),
+                child: Icon(
+                  Icons.person,
+                  size: 24, // Size of the icon inside the circular container
+                  color: ShadesOfGrey.grey3, // Icon color
+                ),
+              ),
+              SizedBox(width: 10), // Space between icon and name
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 16, // Font size for the name
+                  fontWeight: FontWeight.bold, // Bold text
+                  color: ShadesOfGrey.grey5,
+                ),
+              ),
+            ],
+          ),
+          buildRightItemContainer(context, userModel),
+        ],
+      ),
     ),
   );
 }
@@ -185,13 +195,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel) {
 
   return GestureDetector(
     onTap: () {
-      if (CreateGroupControllerState.selectedUsers.value.contains(userModel.id)) {
-        // If user ID exists, remove it
-        CreateGroupControllerState.selectedUsers.value = List.from(CreateGroupControllerState.selectedUsers.value)..remove(userModel.id);
-      } else {
-        // If user ID does not exist, add it
-        CreateGroupControllerState.selectedUsers.value = List.from(CreateGroupControllerState.selectedUsers.value)..add(userModel.id);
-      }
+
     },
       child: Container(
       padding: EdgeInsets.all(8), // Padding for better touch area
@@ -202,7 +206,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel) {
       child: Icon(
         Icons.circle,
         size: 24, // Size of the icon
-        color: selected ? Colors.white : Colors.blue, // Icon color
+        color: selected ? ShadesOfBlue.blue2 : Colors.white, // Icon color
       ),
     ),
   );
