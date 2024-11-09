@@ -44,7 +44,7 @@ Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<Stri
 
   Map<String, dynamic> groupInfo = {
     'id': info['id'],
-    'name': info['name'],
+    'name': info['username'],
     'created_at': DateTime.now().millisecondsSinceEpoch.toInt(),
     'host': true,
   };
