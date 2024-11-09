@@ -1,5 +1,6 @@
 import 'package:aag_group_services/consts/colors.dart';
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
+import 'package:aag_group_services/design/communications/controllers/create_group_controller.dart';
 import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
 import 'package:aag_group_services/design/communications/controllers/notes_controller.dart';
 import 'package:aag_group_services/design/communications/model/messages_model.dart';
@@ -28,6 +29,19 @@ Widget build_chat_screen(BuildContext context) {
           letterSpacing: 1.2, // Space between letters
         ),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.add, // Plus icon
+            size: 30,
+            color: ShadesOfGrey.grey5, // Icon color
+          ),
+          onPressed: () {
+            // Add your onPressed action here
+            pushWithoutAnimation(context, CreateGroupController());
+          },
+        ),
+      ],
     ),
     body: Container(
       width: size.width, // Full width
