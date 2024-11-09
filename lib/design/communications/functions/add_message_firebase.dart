@@ -6,7 +6,7 @@ void addSenderMessageToDB(String sender, String receiver, String message, String
   Map<String, dynamic> userInfo = {
     'name': username,
     'message': message,
-    'created_at': DateTime.now().toString(),
+    'created_at': DateTime.now().millisecondsSinceEpoch.toString().toString(),
     'seen': false,
   };
 

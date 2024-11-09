@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:aag_group_services/design/communications/controllers/group_members_controller.dart';
 import 'package:aag_group_services/design/communications/controllers/group_message_controller.dart';
-import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
+
 import 'package:aag_group_services/design/communications/functions/add_message_firebase.dart';
 import 'package:aag_group_services/design/communications/model/messages_model.dart';
 import 'package:aag_group_services/design/main_pages/controllers/chat.dart';
@@ -54,7 +54,7 @@ Widget buildToolbar(BuildContext context, String name, String groupID) {
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
         onPressed: () {
-          MessageControllerState.messagesList.value = [];
+          GroupMessageControllerState.messagesList.value = [];
           Navigator.pop(context); // Navigates back to the previous screen
         },
       ),
@@ -84,8 +84,8 @@ Widget buildToolbar(BuildContext context, String name, String groupID) {
 }
 
 Widget buildNoteList(BuildContext context) {
-  List<MessageModel> notes = MessageControllerState.messagesList.value;
-  Map<String, String> userInfo = MessageControllerState.userInfo.value;
+  List<MessageModel> notes = GroupMessageControllerState.messagesList.value;
+  Map<String, String> userInfo = GroupMessageControllerState.userInfo.value;
 
   return Expanded(
     child: Container(
@@ -263,7 +263,7 @@ Widget buildTextField(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
     child: TextField(
-      controller: MessageControllerState.noteController.value,
+      controller: GroupMessageControllerState.noteController.value,
       decoration: InputDecoration(
         hintText: 'Send a message',
         contentPadding: EdgeInsets.only(left: 16), // Adjust left padding
@@ -283,13 +283,13 @@ Widget buildTextField(
             Map<String, String> userInfo = await fetchUserInfo();
 
             // Handle send action
-            String message = MessageControllerState.noteController.value.text;
+            String message = GroupMessageControllerState.noteController.value.text;
             addGroupMessageToDB(groupID, message, userInfo['username'].toString());
 
             addToGroupMessageList(GroupMessageControllerState.groupUsersList.value, userInfo['username'].toString(), message,
             groupName, groupID);
 
-            MessageControllerState.noteController.value.clear();
+            GroupMessageControllerState.noteController.value.clear();
           },
         ),
       ),
