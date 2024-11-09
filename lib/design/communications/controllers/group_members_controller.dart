@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../firebase/currentUserId.dart';
 import '../../authentication_pages/models/user_model.dart';
 import '../../main_pages/functions/contact_functions/remove_user_from_list.dart';
+import '../model/group_model.dart';
 import '../screens/group_member_screen.dart';
 
 class GroupMemberController extends StatefulWidget {
@@ -15,8 +16,8 @@ class GroupMemberController extends StatefulWidget {
 }
 
 class GroupMemberControllerState extends State<GroupMemberController> {
-  static ValueNotifier<List<UserModel>> usersList = ValueNotifier<List<UserModel>>([]);
-  static ValueNotifier<List<UserModel>> searchList = ValueNotifier<List<UserModel>>([]);
+  static ValueNotifier<List<GroupUserModel>> usersList = ValueNotifier<List<GroupUserModel>>([]);
+  static ValueNotifier<List<GroupUserModel>> searchList = ValueNotifier<List<GroupUserModel>>([]);
 
   static ValueNotifier<String> searchText = ValueNotifier<String>('');
   static ValueNotifier<TextEditingController> searchController = ValueNotifier<TextEditingController>(TextEditingController());
@@ -64,22 +65,36 @@ class GroupMemberControllerState extends State<GroupMemberController> {
 
       if (snapshot.exists) {
         Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
+        print('Snapshot exists: ${snapshot.exists}, usersMap: $usersMap');
 
-        List<UserModel> fetchedUsers = [];
+        List<GroupUserModel> fetchedUsers = [];
+
         usersMap.forEach((userId, userData) {
-          // Make sure to handle the case where userData might not be a Map
-          if (userData is Map) {
-            fetchedUsers.add(UserModel.fromMap(userId, Map<String, dynamic>.from(userData)));
+          // Explicitly cast userData to Map<String, dynamic>
+          final data = Map<String, dynamic>.from(userData as Map<dynamic, dynamic>);
+          print('Parsing user data for $userId: $data');
+
+          try {
+            fetchedUsers.add(GroupUserModel.fromMap(userId, data));
+          } catch (e) {
+            print('Error parsing user data for $userId: $e');
           }
         });
 
-        // Update the state with the new user list
-        usersList.value = fetchedUsers; // Update ValueNotifier
+        print('Fetched users before sorting: $fetchedUsers');
+
+        // Sort fetchedUsers to have host appear first
+        fetchedUsers.sort((a, b) => b.host.toString().compareTo(a.host.toString()));
+
+        // Update the state with the new sorted user list
+        usersList.value = fetchedUsers;
+        print('Sorted and updated users list: $fetchedUsers');
       }
     }, onError: (error) {
       print('Error listening to users: $error');
     });
   }
+
 
   void searchUsers() {
     searchList.value = usersList.value

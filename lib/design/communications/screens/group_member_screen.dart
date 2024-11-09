@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../firebase/add_friend_firebase.dart';
+import '../model/group_model.dart';
 
 Widget build_group_message_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -15,7 +16,7 @@ Widget build_group_message_screen(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       title: Text(
-        'Contacts',
+        'Group Members',
         style: TextStyle(
           color: ShadesOfGrey.grey5, // Text color
           fontSize: 20, // Font size
@@ -44,7 +45,7 @@ Widget searchField() {
     child: TextField(
       controller: controller, // Controller for managing text input
       decoration: InputDecoration(
-        hintText: 'Search Contacts', // Placeholder text
+        hintText: 'Search Members', // Placeholder text
         filled: true, // Fill the background
         fillColor: Colors.grey[200], // Background color of the search bar
         border: OutlineInputBorder(
@@ -93,7 +94,7 @@ Widget shadowLine(){
 }
 
 Widget listContainer(BuildContext context) {
-  List<UserModel> userModel = GroupMemberControllerState.searchMode.value
+  List<GroupUserModel> userModel = GroupMemberControllerState.searchMode.value
       ? GroupMemberControllerState.searchList.value
       : GroupMemberControllerState.usersList.value;
 
@@ -117,7 +118,7 @@ Widget listContainer(BuildContext context) {
   );
 }
 
-Widget buildItemContainer(BuildContext context, String name, UserModel userModel) {
+Widget buildItemContainer(BuildContext context, String name, GroupUserModel userModel) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
     decoration: BoxDecoration(
@@ -163,13 +164,13 @@ Widget buildItemContainer(BuildContext context, String name, UserModel userModel
   );
 }
 
-Widget buildRightItemContainer(BuildContext context, UserModel userModel){
+Widget buildRightItemContainer(BuildContext context, GroupUserModel userModel){
   return Row(
     children: [
       // Notes icon with separate on click action
       GestureDetector(
         onTap: () {
-          pushWithoutAnimation(context, NotesController(receiverModel: userModel,));
+
         },
         child: Container(
           padding: EdgeInsets.all(8), // Padding for better touch area
@@ -186,8 +187,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel){
       ),
       TextButton(
         onPressed: () {
-          // Handle message action here
-          pushWithoutAnimation(context, MessageController(receiverModel: userModel,));
+
         },
         child: Text(
           'Message',
