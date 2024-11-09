@@ -18,6 +18,7 @@ Future<void> createGroupFirebase(String groupName) async {
 
   addPersonalGroupMessage(selectedUsersList, info, groupName, uniqueID);
   addToGroupMessageList(selectedUsersList, info, groupName, uniqueID);
+  addToGroupLeader(info, uniqueID);
 }
 
 Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<String, String> info, String groupName, String uniqueID) async {
@@ -69,3 +70,21 @@ Future<void> addToGroupMessageList(List<UserModel> selectedUsersList, Map<String
   }
 }
 
+Future<void> addToGroupLeader(Map<String, String> info, String uniqueID) async {
+  Map<String, dynamic> userInfo = {
+    'id': info['id'],
+    'name': info['name'],
+  };
+
+  DatabaseReference reference = FirebaseDatabase.instance
+      .ref()
+      .child('group_leader') // Parent node
+      .child(uniqueID) // User's UID or another field
+      .child(info['id'] ?? ""); // Child is the unique ID for the message
+
+  reference.set(userInfo).then((_) {
+
+  }).catchError((error) {
+
+  });
+}
