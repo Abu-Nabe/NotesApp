@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../firebase/currentUserId.dart';
 import '../../authentication_pages/models/user_model.dart';
+import '../functions/contact_functions/remove_user_from_list.dart';
 import '../screens/contact_screen.dart';
 
 class ContactsPage extends StatefulWidget {
@@ -59,12 +60,6 @@ class ContactsPageState extends State<ContactsPage> {
     setState(() {});
   }
 
-  // Function to remove the current user from the fetched users list
-  void removeCurrentUserFromList(Map<dynamic, dynamic> usersMap) {
-    // Remove the current user from the usersMap
-    usersMap.removeWhere((key, value) => key == currentUserId);
-  }
-
   void fetchUsers() {
     // Listening for changes in the 'users' node
     database.child('contacts').child(currentUserId ?? "").onValue.listen((event) {
@@ -74,7 +69,7 @@ class ContactsPageState extends State<ContactsPage> {
         Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
 
         // Remove the currently logged-in user from the usersMap
-        removeCurrentUserFromList(usersMap);
+        removeCurrentUserFromList(usersMap, currentUserId ?? "");
         // Iterate over each user ID and map each user data to UserModel
         List<UserModel> fetchedUsers = [];
         usersMap.forEach((userId, userData) {
@@ -103,7 +98,7 @@ class ContactsPageState extends State<ContactsPage> {
         Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
 
         // Remove the currently logged-in user from the usersMap
-        removeCurrentUserFromList(usersMap);
+        removeCurrentUserFromList(usersMap, currentUserId ?? "");
 
         // Filter users based on the search text
         List<UserModel> fetchedUsers = [];
