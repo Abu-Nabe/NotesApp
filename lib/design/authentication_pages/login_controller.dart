@@ -42,6 +42,9 @@ class LoginControllerState extends State<LoginController> {
     authenticationMap.removeListener(updateValue);
     screenUpdate.removeListener(updateValue);
 
+    screenUpdate.value = 1;
+    authenticationMap.value = {};
+
     super.dispose();
   }
 

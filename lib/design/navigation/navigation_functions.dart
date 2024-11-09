@@ -11,6 +11,14 @@ void pushWithoutAnimation(BuildContext context, Widget page) {
   );
 }
 
+void pushAndReplaceWithNewPageNoAnimation(BuildContext context, Widget page) {
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (context) => page),
+        (Route<dynamic> route) => false, // This removes all the previous routes
+  );
+}
+
+
 void pushReplacementWithoutAnimation(BuildContext context, Widget page) {
   Navigator.of(context).pushReplacement(
     PageRouteBuilder(
