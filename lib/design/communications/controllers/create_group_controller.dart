@@ -1,12 +1,10 @@
 import 'package:aag_group_services/design/authentication_pages/models/user_model.dart';
-import 'package:aag_group_services/design/communications/model/notes_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../../firebase/currentUserId.dart';
 import '../../main_pages/functions/contact_functions/remove_user_from_list.dart';
 import '../screens/create_group_screen.dart';
-import '../screens/notes_screen.dart';
 
 class CreateGroupController extends StatefulWidget {
   const CreateGroupController({Key? key});
@@ -76,7 +74,9 @@ class CreateGroupControllerState extends State<CreateGroupController> {
   }
 
   void updateValue(){
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
