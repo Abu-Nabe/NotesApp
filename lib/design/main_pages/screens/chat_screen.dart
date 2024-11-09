@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import '../../../extension/time_ago.dart';
 import '../../../firebase/add_friend_firebase.dart';
 import '../../../firebase/user_info.dart';
+import '../../communications/controllers/group_message_controller.dart';
 import '../controllers/chat.dart';
 import '../controllers/contact.dart';
 import '../functions/contact_functions/check_friends.dart';
@@ -143,9 +144,13 @@ Widget listContainer(BuildContext context) {
 Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
   return GestureDetector(
     onTap: () async {
-      UserModel? userModel = await fetchUserInfoToModel(itemModel.id);
-      if(userModel != null){
-        pushWithoutAnimation(context, MessageController(receiverModel: userModel,));
+      if(!itemModel.isGroup){
+        UserModel? userModel = await fetchUserInfoToModel(itemModel.id);
+        if(userModel != null){
+          pushWithoutAnimation(context, MessageController(receiverModel: userModel,));
+        }
+      }else{
+          pushWithoutAnimation(context, GroupMessageController(messageModel: itemModel,));
       }
     },
     child: Container(
@@ -178,7 +183,7 @@ Widget buildItemContainer(BuildContext context, MessageModel itemModel) {
                   color: Colors.white,
                 ),
                 child: Icon(
-                  Icons.person,
+                  !itemModel.isGroup ? Icons.person : Icons.group,
                   size: 24,
                   color: ShadesOfGrey.grey3,
                 ),
