@@ -8,9 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../firebase/add_friend_firebase.dart';
+import '../functions/remove_group_firebase.dart';
 import '../model/group_model.dart';
 
-Widget build_group_message_screen(BuildContext context) {
+Widget build_group_message_screen(BuildContext context, String groupID) {
   final size = MediaQuery.of(context).size;
 
   return Scaffold(
@@ -32,7 +33,7 @@ Widget build_group_message_screen(BuildContext context) {
         children: [
           searchField(),
           shadowLine(),
-          listContainer(context),
+          listContainer(context, groupID),
         ],
       ),
     ),
@@ -93,7 +94,7 @@ Widget shadowLine(){
   );
 }
 
-Widget listContainer(BuildContext context) {
+Widget listContainer(BuildContext context, String groupID) {
   List<GroupUserModel> userModel = GroupMemberControllerState.searchMode.value
       ? GroupMemberControllerState.searchList.value
       : GroupMemberControllerState.usersList.value;
@@ -110,7 +111,7 @@ Widget listContainer(BuildContext context) {
           separatorBuilder: (context, index) => Divider(color: ShadesOfGrey.grey2, height: 1), // Divider between items
           itemBuilder: (context, index) {
             final user = userModel[index]; // Get the user at the current index
-            return buildItemContainer(context, user.name, user); // Display each user's name
+            return buildItemContainer(context, user.name, user, groupID); // Display each user's name
           },
         ),
       ),
@@ -118,12 +119,14 @@ Widget listContainer(BuildContext context) {
   );
 }
 
-Widget buildItemContainer(BuildContext context, String name, GroupUserModel userModel) {
+Widget buildItemContainer(BuildContext context, String name, GroupUserModel userModel, String groupID) {
+  bool isHost = userModel.host;
+
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the container
     decoration: BoxDecoration(
       border: Border(
-        bottom: BorderSide(color: Colors.grey[300]!, width: 1), // Optional bottom border for separation
+        bottom: BorderSide(color: Colors.grey[300]!, width: 2), // Optional bottom border for separation
       ),
     ),
     child: Row(
@@ -148,83 +151,49 @@ Widget buildItemContainer(BuildContext context, String name, GroupUserModel user
               ),
             ),
             SizedBox(width: 10), // Space between icon and name
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 16, // Font size for the name
-                fontWeight: FontWeight.bold, // Bold text
-                color: ShadesOfGrey.grey5,
-              ),
-            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start, // Aligns children across the row
+              crossAxisAlignment: CrossAxisAlignment.start, // Aligns children across the row
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 16, // Font size for the name
+                    fontWeight: FontWeight.bold, // Bold text
+                    color: ShadesOfGrey.grey5,
+                  ),
+                ),
+                Text(
+                  !isHost ? "Member" : "Host",
+                  style: TextStyle(
+                    fontSize: 14, // Font size for the name
+                    fontWeight: FontWeight.w500, // Bold text
+                    color: ShadesOfGrey.grey5,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
-        buildRightItemContainer(context, userModel), // Call for non-friends
+        !isHost ? buildRightItemContainer(context, userModel, groupID)
+        : SizedBox.shrink(), // Call for non-friends
       ],
     ),
   );
 }
 
-Widget buildRightItemContainer(BuildContext context, GroupUserModel userModel){
-  return Row(
-    children: [
-      // Notes icon with separate on click action
-      GestureDetector(
-        onTap: () {
-
-        },
-        child: Container(
-          padding: EdgeInsets.all(8), // Padding for better touch area
-          decoration: BoxDecoration(
-            shape: BoxShape.circle, // Makes the icon button circular
-            color: Colors.blue.withOpacity(0.1), // Background color with transparency
-          ),
-          child: Icon(
-            Icons.note_add,
-            size: 24, // Size of the icon
-            color: Colors.blue, // Icon color
-          ),
-        ),
-      ),
-      TextButton(
-        onPressed: () {
-
-        },
-        child: Text(
-          'Message',
-          style: TextStyle(
-            color: Colors.blue, // Text color (customize as needed)
-            fontSize: 16, // Font size (customize as needed)
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget buildSearchItemContainer(BuildContext context, UserModel userModel) {
-  return TextButton(
+Widget buildRightItemContainer(BuildContext context, GroupUserModel userModel, String groupID){
+  return  TextButton(
     onPressed: () {
-
+      removeGroupUser(groupID, userModel.id);
     },
-    child: Row(
-      mainAxisSize: MainAxisSize.min, // Adjust size to fit icon and text only
-      children: [
-        // Conditionally show the add icon based on the added state
-        Icon(
-          Icons.add, // The + icon
-          color: Colors.blue, // Icon color
-          size: 18, // Icon size
-        ),
-        SizedBox(width: 4), // Space between icon and text
-        Text(
-          "Add",
-          style: TextStyle(
-            color: Colors.blue, // Text color
-            fontSize: 16, // Font size
-          ),
-        ),
-      ],
+    child: Text(
+      'Remove',
+      style: TextStyle(
+        color: ShadesOfRed.red5, // Text color (customize as needed)
+        fontSize: 16, // Font size (customize as needed)
+        fontWeight: FontWeight.bold, // Font size (customize as needed)
+      ),
     ),
   );
 }
-
