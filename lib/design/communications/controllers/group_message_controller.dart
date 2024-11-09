@@ -49,30 +49,23 @@ class GroupMessageControllerState extends State<GroupMessageController> {
 
       if (snapshot.exists) {
         Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
-        print('Snapshot exists: ${snapshot.exists}, usersMap: $usersMap');
 
         List<GroupUserModel> fetchedUsers = [];
 
         usersMap.forEach((userId, userData) {
           // Explicitly cast userData to Map<String, dynamic>
           final data = Map<String, dynamic>.from(userData as Map<dynamic, dynamic>);
-          print('Parsing user data for $userId: $data');
 
           try {
             fetchedUsers.add(GroupUserModel.fromMap(userId, data));
           } catch (e) {
-            print('Error parsing user data for $userId: $e');
           }
         });
-
-        print('Fetched users before sorting: $fetchedUsers');
-
         // Sort fetchedUsers to have host appear first
         fetchedUsers.sort((a, b) => b.host.toString().compareTo(a.host.toString()));
 
         // Update the state with the new sorted user list
         groupUsersList.value = fetchedUsers;
-        print('Sorted and updated users list: $fetchedUsers');
       }
     }, onError: (error) {
       print('Error listening to users: $error');
@@ -80,7 +73,6 @@ class GroupMessageControllerState extends State<GroupMessageController> {
   }
 
   void fetchNotes() {
-    // Listening for changes in the 'notes' node for the specific user and receiver
     database.child('messages').child(widget.messageModel.id).onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
@@ -92,19 +84,22 @@ class GroupMessageControllerState extends State<GroupMessageController> {
         List<MessageModel> fetchedNotes = [];
 
         userNotesMap.forEach((timestampKey, noteData) {
-          // Check if noteData is structured as expected with timestamp keys
+          print('Timestamp: $timestampKey');
+          print('Note data: $noteData');
+
+          // Ensure noteData is in the expected structure
           if (noteData is Map) {
-            noteData.forEach((timeKey, details) {
-              if (details is Map) {
-                fetchedNotes.add(MessageModel.fromMap(timeKey, Map<String, dynamic>.from(details)));
-              }
-            });
+            fetchedNotes.add(MessageModel.fromMap(timestampKey, Map<String, dynamic>.from(noteData)));
+          } else {
+            print('Details for note are not in the expected Map format: $noteData');
           }
         });
+
+        // Sort notes based on the timestamp
         fetchedNotes.sort((b, a) => a.createdAt.compareTo(b.createdAt));
 
         // Update the state with the list of notes
-        messagesList.value = fetchedNotes; // Update ValueNotifier
+        messagesList.value = fetchedNotes;
       } else {
         // Handle case where snapshot is empty or not in expected format
         messagesList.value = [];
