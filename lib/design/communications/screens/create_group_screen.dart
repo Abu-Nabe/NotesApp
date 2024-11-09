@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../consts/colors.dart';
 import '../../authentication_pages/models/user_model.dart';
+import '../dialogs/confirm_group_dialog.dart';
 
 Widget build_create_group_screen(BuildContext context) {
   final size = MediaQuery.of(context).size;
@@ -22,8 +23,18 @@ Widget build_create_group_screen(BuildContext context) {
       actions: [
         if (CreateGroupControllerState.selectedUsers.value.length > 0)
           TextButton(
-            onPressed: () {
-              // Add your create action here
+            onPressed: () async {
+              bool? result = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return ConfirmGroupDialog();
+                },
+              );
+
+              if (result != null && result) {
+                CreateGroupControllerState.selectedUsers.value = [];
+                Navigator.pop(context);
+              }
             },
             child: Text(
               'Create',
@@ -193,11 +204,7 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel) {
     selected = true;
   }
 
-  return GestureDetector(
-    onTap: () {
-
-    },
-      child: Container(
+  return Container(
       padding: EdgeInsets.all(8), // Padding for better touch area
       decoration: BoxDecoration(
         shape: BoxShape.circle, // Makes the icon button circular
@@ -208,7 +215,6 @@ Widget buildRightItemContainer(BuildContext context, UserModel userModel) {
         size: 24, // Size of the icon
         color: selected ? ShadesOfBlue.blue2 : Colors.white, // Icon color
       ),
-    ),
   );
 }
 

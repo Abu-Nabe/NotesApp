@@ -21,18 +21,18 @@ class MessageModel {
       id: id,
       name: data['name'] ?? 'No Name',
       message: data['message'] ?? 'No Message',
-      createdAt: data['created_at'] ?? "0",
+      createdAt: data['created_at'] ?? "0",  // Consider using DateTime or a more consistent format
       seen: data['seen'] ?? false,
       isGroup: data['is_group'] ?? false,
     );
   }
 
-  // Convert the UserModel to a Map for Firestore or other uses
+  // Convert the MessageModel to a Map for Firestore or other uses
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
-      'email': message,
+      'message': message,  // Fixed key mismatch
       'created_at': createdAt,
       'seen': seen,
       'is_group': isGroup
