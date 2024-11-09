@@ -9,7 +9,8 @@ import '../screens/group_member_screen.dart';
 
 class GroupMemberController extends StatefulWidget {
   final String groupID;
-  const GroupMemberController({super.key, required this.groupID});
+  final List<GroupUserModel> groupUserModel;
+  const GroupMemberController({super.key, required this.groupID, required this.groupUserModel});
 
   @override
   State<GroupMemberController> createState() => GroupMemberControllerState();
@@ -39,7 +40,7 @@ class GroupMemberControllerState extends State<GroupMemberController> {
 
     currentUserId = getCurrentUserID();
 
-    fetchUsers();
+    usersList.value = widget.groupUserModel;
   }
 
   @override

@@ -10,23 +10,20 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-      future: _getCurrentUser(), // Get the current user once
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(), // Listen for auth state changes
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator()); // Show a loading spinner while waiting
+          return const Center(child: CircularProgressIndicator()); // Loading state
         }
+
+        // If the user is logged in, show the bottom navigation
         if (snapshot.hasData && snapshot.data != null) {
-          return const BottomNavigation(); // User is signed in, show bottom navigation
+          return const BottomNavigation();
         } else {
-          return const LoginController(); // User is not signed in, show login page
+          return const LoginController(); // Show login page if not logged in
         }
       },
     );
-  }
-
-  // Function to get the current user
-  Future<User?> _getCurrentUser() async {
-    return FirebaseAuth.instance.currentUser; // Get the current user
   }
 }

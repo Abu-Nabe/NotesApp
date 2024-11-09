@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:aag_group_services/design/communications/controllers/group_members_controller.dart';
+import 'package:aag_group_services/design/communications/controllers/group_message_controller.dart';
 import 'package:aag_group_services/design/communications/controllers/message_controller.dart';
 import 'package:aag_group_services/design/communications/functions/add_message_firebase.dart';
 import 'package:aag_group_services/design/communications/model/messages_model.dart';
@@ -16,6 +19,7 @@ import '../../../firebase/user_info.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
 import '../../navigation/navigation_functions.dart';
 import '../controllers/notes_controller.dart';
+import '../functions/add_group_message_list.dart';
 
 Widget build_group_message_screen(
     BuildContext context, MessageModel messageModel) {
@@ -37,7 +41,7 @@ Widget build_group_message_screen(
             toolbar_shadow_line(context),
             buildNoteList(context),
             buildTextField(context, getCurrentUserID(), messageModel.id,
-                messageModel.name),
+                messageModel.name, messageModel.name, messageModel.id),
           ],
         ),
       ),
@@ -72,7 +76,7 @@ Widget buildToolbar(BuildContext context, String name, String groupID) {
           icon: Icon(Icons.group, color: Colors.black), // Right icon #1
           onPressed: () {
             // Define action for the search icon
-            pushWithoutAnimation(context, GroupMemberController( groupID: groupID));
+            pushWithoutAnimation(context, GroupMemberController(groupID: groupID, groupUserModel: GroupMessageControllerState.groupUsersList.value));
           },
         ),
       ]
@@ -254,7 +258,7 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
 }
 
 Widget buildTextField(
-    BuildContext context, String sender, String receiver, String receiverName) {
+    BuildContext context, String sender, String receiver, String receiverName, String groupName, String groupID) {
   return Container(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
@@ -280,15 +284,10 @@ Widget buildTextField(
 
             // Handle send action
             String message = MessageControllerState.noteController.value.text;
-            addSenderMessageToDB(
-                sender, receiver, message, userInfo['username'].toString());
-            addReceiverMessageToDB(
-                sender, receiver, message, userInfo['username'].toString());
+            addGroupMessageToDB(groupID, message, userInfo['username'].toString());
 
-            addToMessageList(sender, receiver, message,
-                userInfo['username'].toString(), receiverName);
-            addToFriendMessageList(sender, receiver, message,
-                userInfo['username'].toString(), receiverName);
+            addToGroupMessageList(GroupMessageControllerState.groupUsersList.value, userInfo['username'].toString(), message,
+            groupName, groupID);
 
             MessageControllerState.noteController.value.clear();
           },
