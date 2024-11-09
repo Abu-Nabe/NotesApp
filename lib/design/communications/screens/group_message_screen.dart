@@ -14,7 +14,8 @@ import '../../../extension/time_ago.dart';
 import '../../../firebase/user_info.dart';
 import '../../const/reusable_layouts/toolbar_shadow_line.dart';
 
-Widget build_group_message_screen(BuildContext context, MessageModel messageModel) {
+Widget build_group_message_screen(
+    BuildContext context, MessageModel messageModel) {
   final size = MediaQuery.of(context).size;
 
   return Scaffold(
@@ -26,12 +27,14 @@ Widget build_group_message_screen(BuildContext context, MessageModel messageMode
         width: size.width, // Full width
         height: size.height, // Full height
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes the TextField to the bottom
+          mainAxisAlignment: MainAxisAlignment
+              .spaceBetween, // Pushes the TextField to the bottom
           children: [
             buildToolbar(context, messageModel.name),
             toolbar_shadow_line(context),
             buildNoteList(context),
-            buildTextField(context, getCurrentUserID(), messageModel.id, messageModel.name),
+            buildTextField(context, getCurrentUserID(), messageModel.id,
+                messageModel.name),
           ],
         ),
       ),
@@ -41,25 +44,34 @@ Widget build_group_message_screen(BuildContext context, MessageModel messageMode
 
 Widget buildToolbar(BuildContext context, String name) {
   return AppBar(
-    leading: IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
-      onPressed: () {
-        MessageControllerState.messagesList.value = [];
-        Navigator.pop(context); // Navigates back to the previous screen
-      },
-    ),
-    title: Text(
-      "${name}", // Title of the toolbar with string interpolation
-      style: TextStyle(
-        color: Colors.black, // Title text color
-        fontWeight: FontWeight.bold, // Bold text
-        fontSize: 16, // Font size of the title
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.black), // Back arrow icon
+        onPressed: () {
+          MessageControllerState.messagesList.value = [];
+          Navigator.pop(context); // Navigates back to the previous screen
+        },
       ),
-      overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
-      maxLines: 1, // Restrict to a single line
-    ),
-    backgroundColor: Colors.white, // Background color of the toolbar (customize as needed)
-    elevation: 4, // Shadow effect under the AppBar
+      title: Text(
+        "${name}", // Title of the toolbar with string interpolation
+        style: TextStyle(
+          color: Colors.black, // Title text color
+          fontWeight: FontWeight.bold, // Bold text
+          fontSize: 16, // Font size of the title
+        ),
+        overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+        maxLines: 1, // Restrict to a single line
+      ),
+      backgroundColor:
+      Colors.white, // Background color of the toolbar (customize as needed)
+      elevation: 4, // Shadow effect under the AppBar
+      actions: [
+        IconButton(
+          icon: Icon(Icons.group, color: Colors.black), // Right icon #1
+          onPressed: () {
+            // Define action for the search icon
+          },
+        ),
+      ]
   );
 }
 
@@ -71,8 +83,10 @@ Widget buildNoteList(BuildContext context) {
     child: Container(
       color: ShadesOfGrey.grey2,
       child: ListView.builder(
-        reverse: true, // Ensures the list aligns from the bottom like a chat view
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Padding around the list
+        reverse:
+            true, // Ensures the list aligns from the bottom like a chat view
+        padding: EdgeInsets.symmetric(
+            horizontal: 16, vertical: 8), // Padding around the list
         itemCount: notes.length,
         itemBuilder: (context, index) {
           // Mini texts displayed as individual notes
@@ -111,7 +125,8 @@ Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
               ],
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Align texts to the start
               children: [
                 Text(
                   note.message, // First text: the note itself
@@ -121,7 +136,9 @@ Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
                     fontWeight: FontWeight.bold, // Makes the note bold
                   ),
                 ),
-                SizedBox(height: 4), // Add some space between the note and the sender
+                SizedBox(
+                    height:
+                        4), // Add some space between the note and the sender
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -129,9 +146,11 @@ Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
                       note.name, // Second text: the sender
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: Colors.grey[700], // A lighter color for the sender
+                        color:
+                            Colors.grey[700], // A lighter color for the sender
                       ),
-                      overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+                      overflow: TextOverflow
+                          .ellipsis, // Add ellipsis if text overflows
                       maxLines: 1, // Restrict to a single line
                     ),
                     SizedBox(width: 10),
@@ -139,7 +158,8 @@ Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
                       timeAgo(note.createdAt.toString()), // Timestamp
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: Colors.grey[700], // A lighter color for the sender
+                        color:
+                            Colors.grey[700], // A lighter color for the sender
                       ),
                     ),
                   ],
@@ -148,7 +168,9 @@ Widget buildMessageLeftContainer(BuildContext context, MessageModel note) {
             ),
           ),
         ),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.1), // Padding of 50 on the right side
+        SizedBox(
+            width: MediaQuery.of(context).size.width *
+                0.1), // Padding of 50 on the right side
       ],
     ),
   );
@@ -160,7 +182,9 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: MediaQuery.of(context).size.width * 0.1), // Padding of 50 on the left side
+        SizedBox(
+            width: MediaQuery.of(context).size.width *
+                0.1), // Padding of 50 on the left side
         Expanded(
           child: Container(
             padding: EdgeInsets.all(10),
@@ -177,7 +201,8 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
               ],
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the start
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Align texts to the start
               children: [
                 Text(
                   note.message, // First text: the note itself
@@ -187,7 +212,9 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
                     fontWeight: FontWeight.bold, // Makes the note bold
                   ),
                 ),
-                SizedBox(height: 4), // Add some space between the note and the sender
+                SizedBox(
+                    height:
+                        4), // Add some space between the note and the sender
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -195,9 +222,11 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
                       note.name, // Second text: the sender
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: ShadesOfGrey.grey2, // A lighter color for the sender
+                        color: ShadesOfGrey
+                            .grey2, // A lighter color for the sender
                       ),
-                      overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+                      overflow: TextOverflow
+                          .ellipsis, // Add ellipsis if text overflows
                       maxLines: 1, // Restrict to a single line
                     ),
                     SizedBox(width: 10),
@@ -205,7 +234,8 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
                       timeAgo(note.createdAt.toString()), // Timestamp
                       style: TextStyle(
                         fontSize: 12, // Smaller text size for the sender
-                        color: ShadesOfGrey.grey2, // A lighter color for the sender
+                        color: ShadesOfGrey
+                            .grey2, // A lighter color for the sender
                       ),
                     ),
                   ],
@@ -219,7 +249,8 @@ Widget buildMessageRightContainer(BuildContext context, MessageModel note) {
   );
 }
 
-Widget buildTextField(BuildContext context, String sender, String receiver, String receiverName) {
+Widget buildTextField(
+    BuildContext context, String sender, String receiver, String receiverName) {
   return Container(
     padding: EdgeInsets.all(16),
     color: Colors.white, // Background for the TextField container
@@ -234,7 +265,8 @@ Widget buildTextField(BuildContext context, String sender, String receiver, Stri
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: ShadesOfWhite.white3, width: 2), // Solid grey border
+          borderSide: BorderSide(
+              color: ShadesOfWhite.white3, width: 2), // Solid grey border
         ),
         suffixIcon: IconButton(
           icon: Icon(Icons.send),
@@ -244,11 +276,15 @@ Widget buildTextField(BuildContext context, String sender, String receiver, Stri
 
             // Handle send action
             String message = MessageControllerState.noteController.value.text;
-            addSenderMessageToDB(sender, receiver, message, userInfo['username'].toString());
-            addReceiverMessageToDB(sender, receiver, message, userInfo['username'].toString());
+            addSenderMessageToDB(
+                sender, receiver, message, userInfo['username'].toString());
+            addReceiverMessageToDB(
+                sender, receiver, message, userInfo['username'].toString());
 
-            addToMessageList(sender, receiver, message, userInfo['username'].toString(), receiverName);
-            addToFriendMessageList(sender, receiver, message, userInfo['username'].toString(), receiverName);
+            addToMessageList(sender, receiver, message,
+                userInfo['username'].toString(), receiverName);
+            addToFriendMessageList(sender, receiver, message,
+                userInfo['username'].toString(), receiverName);
 
             MessageControllerState.noteController.value.clear();
           },

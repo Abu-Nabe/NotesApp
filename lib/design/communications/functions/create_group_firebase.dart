@@ -18,7 +18,6 @@ Future<void> createGroupFirebase(String groupName) async {
 
   addPersonalGroupMessage(selectedUsersList, info, groupName, uniqueID);
   addToGroupMessageList(selectedUsersList, info, groupName, uniqueID);
-  addToGroupLeader(info, uniqueID);
 }
 
 Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<String, String> info, String groupName, String uniqueID) async {
@@ -42,7 +41,17 @@ Future<void> addPersonalGroupMessage(List<UserModel> selectedUsersList, Map<Stri
   }).catchError((error) {
 
   });
+
+  Map<String, dynamic> groupInfo = {
+    'id': info['id'],
+    'name': info['name'],
+    'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+    'host': true,
+  };
+
+  addToHostGroupList(info, groupInfo, uniqueID);
 }
+
 Future<void> addToGroupMessageList(List<UserModel> selectedUsersList, Map<String, String> info, String groupName, String uniqueID) async {
   Map<String, dynamic> userInfo = {
     'name': groupName,
@@ -63,28 +72,51 @@ Future<void> addToGroupMessageList(List<UserModel> selectedUsersList, Map<String
 
     // Write user information to the database
     reference.set(userInfo).then((_) {
-      print('Message added for user ${user.name} successfully!');
+
     }).catchError((error) {
-      print('Error adding message for user ${user.name}: $error');
+
     });
+
+    Map<String, dynamic> groupInfo = {
+      'id': user.id,
+      'name': user.name,
+      'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
+      'host': false,
+    };
+
+    addToGroupList(user, groupInfo, uniqueID);
   }
 }
 
-Future<void> addToGroupLeader(Map<String, String> info, String uniqueID) async {
-  Map<String, dynamic> userInfo = {
-    'id': info['id'],
-    'name': info['name'],
-  };
-
-  DatabaseReference reference = FirebaseDatabase.instance
+void addToHostGroupList(Map<String, String> info, Map<String, dynamic> groupInfo, String uniqueID) {
+  DatabaseReference group_reference = FirebaseDatabase.instance
       .ref()
-      .child('group_leader') // Parent node
-      .child(uniqueID) // User's UID or another field
-      .child(info['id'] ?? ""); // Child is the unique ID for the message
+      .child('group_list') // Parent node
+      .child(uniqueID)
+      .child(info['id'] ?? '');
 
-  reference.set(userInfo).then((_) {
+  // Write user information to the database
+  group_reference.set(groupInfo).then((_) {
 
   }).catchError((error) {
 
   });
 }
+
+
+
+void addToGroupList(UserModel user, Map<String, dynamic> groupInfo, String uniqueID) {
+  DatabaseReference group_reference = FirebaseDatabase.instance
+      .ref()
+      .child('group_list') // Parent node
+      .child(uniqueID)
+      .child(user.id);
+
+  // Write user information to the database
+  group_reference.set(groupInfo).then((_) {
+
+  }).catchError((error) {
+
+  });
+}
+
