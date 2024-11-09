@@ -1,7 +1,10 @@
 import 'package:aag_group_services/consts/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../extension/version_number.dart';
 import '../../firebase/authenticated_state.dart';
+import '../authentication_pages/login_controller.dart';
+import '../bottom_navigation.dart';
 import '../navigation/navigation_functions.dart';
 import 'package:package_info/package_info.dart';
 
@@ -19,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _getAppVersion(); // Get the app version as soon as the widget is initialized
-    _navigateToNextScreen();
+    _checkUserStatusAndNavigate();
   }
 
   // Function to get the app version and update the state
@@ -30,11 +33,29 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  // Function to navigate after 3 seconds
-  Future<void> _navigateToNextScreen() async {
-    await Future.delayed(const Duration(seconds: 3)); // Wait for 3 seconds
-    if (mounted) {
-      pushReplacementWithoutAnimation(context, const AuthWrapper());
+  // Function to check user status and navigate accordingly
+  Future<void> _checkUserStatusAndNavigate() async {
+    await Future.delayed(const Duration(seconds: 2)); // Wait a bit for splash screen
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    // Navigate based on user authentication status
+    if (currentUser != null) {
+      // User is signed in
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavigation()),
+        );
+      }
+    } else {
+      // User is not signed in
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginController()),
+        );
+      }
     }
   }
 

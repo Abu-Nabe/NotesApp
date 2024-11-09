@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../../../firebase/user_info.dart';
+import '../model/group_model.dart';
 import '../screens/group_message_screen.dart';
 
 class GroupMessageController extends StatefulWidget {
@@ -17,6 +18,7 @@ class GroupMessageControllerState extends State<GroupMessageController> {
   static ValueNotifier<List<MessageModel>> messagesList = ValueNotifier<List<MessageModel>>([]);
   static ValueNotifier<Map<String, String>> userInfo = ValueNotifier<Map<String, String>>({});
 
+  static ValueNotifier<List<GroupUserModel>> groupUsersList = ValueNotifier<List<GroupUserModel>>([]);
   static final ValueNotifier<TextEditingController> noteController = ValueNotifier<TextEditingController>(TextEditingController());
 
   final database = FirebaseDatabase.instance.ref();
@@ -28,18 +30,58 @@ class GroupMessageControllerState extends State<GroupMessageController> {
     // Additional initialization logic if needed
     noteController.addListener(updateState);
     messagesList.addListener(updateState);
+    groupUsersList.addListener(updateState);
 
     fetchUserDetails();
     fetchNotes();
+    fetchGroupMembers(widget.messageModel.id);
   }
 
   Future<void> fetchUserDetails() async {
     Map<String, String> user = await fetchUserInfo();
     userInfo.value = user;
   }
+
+  void fetchGroupMembers(String groupID) {
+    // Listening for changes in the 'users' node
+    database.child('group_list').child(groupID).onValue.listen((event) {
+      DataSnapshot snapshot = event.snapshot;
+
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> usersMap = snapshot.value as Map<dynamic, dynamic>;
+        print('Snapshot exists: ${snapshot.exists}, usersMap: $usersMap');
+
+        List<GroupUserModel> fetchedUsers = [];
+
+        usersMap.forEach((userId, userData) {
+          // Explicitly cast userData to Map<String, dynamic>
+          final data = Map<String, dynamic>.from(userData as Map<dynamic, dynamic>);
+          print('Parsing user data for $userId: $data');
+
+          try {
+            fetchedUsers.add(GroupUserModel.fromMap(userId, data));
+          } catch (e) {
+            print('Error parsing user data for $userId: $e');
+          }
+        });
+
+        print('Fetched users before sorting: $fetchedUsers');
+
+        // Sort fetchedUsers to have host appear first
+        fetchedUsers.sort((a, b) => b.host.toString().compareTo(a.host.toString()));
+
+        // Update the state with the new sorted user list
+        groupUsersList.value = fetchedUsers;
+        print('Sorted and updated users list: $fetchedUsers');
+      }
+    }, onError: (error) {
+      print('Error listening to users: $error');
+    });
+  }
+
   void fetchNotes() {
     // Listening for changes in the 'notes' node for the specific user and receiver
-    database.child('messages').child(currentUserId ?? "").child(widget.messageModel.id).onValue.listen((event) {
+    database.child('messages').child(widget.messageModel.id).onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists && snapshot.value is Map) {
@@ -80,6 +122,7 @@ class GroupMessageControllerState extends State<GroupMessageController> {
   void dispose() {
     noteController.removeListener(updateState);
     messagesList.removeListener(updateState);
+    groupUsersList.removeListener(updateState);
 
     super.dispose();
   }
