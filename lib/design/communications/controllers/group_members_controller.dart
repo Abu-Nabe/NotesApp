@@ -104,6 +104,6 @@ class GroupMemberControllerState extends State<GroupMemberController> {
 
   @override
   Widget build(BuildContext context) {
-    return build_group_message_screen(context);
+    return build_group_message_screen(context, widget.groupID);
   }
 }
