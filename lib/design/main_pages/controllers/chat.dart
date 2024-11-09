@@ -56,6 +56,10 @@ class ChatPageState extends State<ChatPage> {
     searchText.removeListener(searchUsers);
 
     updatePage.removeListener(updateValue);
+
+    messagesList.value = [];
+    searchList.value = [];
+
     super.dispose();
   }
 

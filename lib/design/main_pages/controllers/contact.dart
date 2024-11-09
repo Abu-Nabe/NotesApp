@@ -29,7 +29,6 @@ class ContactsPageState extends State<ContactsPage> {
   @override
   void initState() {
     super.initState();
-
     usersList.addListener(updateValue);
     searchList.addListener(updateValue);
     searchMode.addListener(updateValue);
@@ -52,6 +51,8 @@ class ContactsPageState extends State<ContactsPage> {
     searchText.removeListener(searchUsers);
     updatePage.removeListener(updateValue);
 
+    usersList.value = [];
+    searchList.value = [];
     super.dispose();
   }
 

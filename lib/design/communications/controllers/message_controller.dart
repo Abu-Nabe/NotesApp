@@ -82,6 +82,7 @@ class MessageControllerState extends State<MessageController> {
     noteController.removeListener(updateState);
     messagesList.removeListener(updateState);
 
+    messagesList.value = [];
     super.dispose();
   }
 

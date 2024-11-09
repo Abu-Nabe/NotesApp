@@ -47,7 +47,7 @@ Widget build_settings_screen(BuildContext context) {
             ),
             buildSettingsList("Log Out", Icons.exit_to_app, () {
                 signOut();
-                pushWithoutAnimation(context, LoginController());
+                pushAndReplaceWithNewPageNoAnimation(context, LoginController());
               },
             ),
           ],

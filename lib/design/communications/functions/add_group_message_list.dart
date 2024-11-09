@@ -8,7 +8,7 @@ void addGroupMessageToDB(String groupID, String message, String username){
   Map<String, dynamic> userInfo = {
     'name': username,
     'message': message,
-    'created_at': DateTime.now().millisecondsSinceEpoch.toString().toString(),
+    'created_at': DateTime.now().millisecondsSinceEpoch.toString(),
     'seen': false,
   };
   // Reference to the Firebase Realtime Database

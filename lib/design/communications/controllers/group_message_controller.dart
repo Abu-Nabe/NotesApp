@@ -119,6 +119,8 @@ class GroupMessageControllerState extends State<GroupMessageController> {
     messagesList.removeListener(updateState);
     groupUsersList.removeListener(updateState);
 
+    messagesList.value = [];
+    groupUsersList.value = [];
     super.dispose();
   }
 

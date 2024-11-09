@@ -105,11 +105,9 @@ Widget containerLabel(){
 }
 
 Widget inputField(Map<String, dynamic> authDetails, String type){
-  String text = checkType(type);
-
   return TextField(
     decoration: InputDecoration(
-      labelText: text, // Label for the input field
+      labelText: 'Enter Email', // Label for the input field
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.0), // Add circular border radius
         borderSide: BorderSide(
