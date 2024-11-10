@@ -25,8 +25,15 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace "com.example.aag_group_services"
+    namespace "com.aag_group_services"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -36,18 +43,27 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.aag_group_services"
+        applicationId "com.aag_group_services"
         minSdkVersion 23 // Updated from 19 to 21
         targetSdkVersion 34 // Consider updating to the latest version
         versionCode 1
         versionName "1.0"
     }
 
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword = keystoreProperties['keyPassword']
+            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword = keystoreProperties['storePassword']
+        }
+    }
+t
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
