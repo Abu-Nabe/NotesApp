@@ -58,19 +58,19 @@ android {
             storePassword = keystoreProperties['storePassword']
         }
     }
-t
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Signing with the debug keys for now, so flutter run --release works.
             signingConfig signingConfigs.release
         }
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22" // Ensure this matches with the version you want
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22" // Ensure the same version
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
     // Other dependencies...
 }
 
