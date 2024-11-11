@@ -33,7 +33,8 @@ migrate_working_dir/
 /build/
 .env
 /android/keystore.properties
-/macos/Runner/info.plist
+/macos/Runner/GoogleService-Info.plist
+
 # Symbolication related
 app.*.symbols
 
