@@ -29,6 +29,8 @@ class NotesControllerState extends State<NotesController> {
     noteController.addListener(updateState);
     notesList.addListener(updateState);
 
+    // notesList.value = [];
+
     fetchNotes();
   }
 
