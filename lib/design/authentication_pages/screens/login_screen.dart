@@ -4,7 +4,6 @@ import 'package:aag_group_services/consts/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../consts/strings/authentication_strings/authentication_strings.dart';
 import '../../../extension/phone_number_simplifier.dart';
@@ -102,42 +101,42 @@ Widget loginLabel(){
   );
 }
 
-Widget loginPhoneField(Map<String, dynamic> authDetails) {
-  return InternationalPhoneNumberInput(
-    onInputChanged: (PhoneNumber number) {
-      String verifyNumber = '${number.phoneNumber}';
-
-      authDetails[numberString] = simplifyPhoneNumber(verifyNumber);
-    },
-    selectorConfig: SelectorConfig(
-      selectorType: PhoneInputSelectorType.DROPDOWN,
-    ),
-    ignoreBlank: false,
-    autoValidateMode: AutovalidateMode.disabled,
-    selectorTextStyle: const TextStyle(color: Colors.black),
-    textFieldController: TextEditingController(),
-    formatInput: false,
-    keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
-    inputDecoration: InputDecoration(
-      labelText: "Enter Phone Number",
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(
-          color: ShadesOfGrey.grey2,
-          width: 2.0,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: BorderSide(
-          color: ShadesOfGrey.grey2, // Border color for the enabled state
-          width: 2.0,
-        ),
-      ),
-      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0), // Adjust padding
-    ),
-  );
-}
+// Widget loginPhoneField(Map<String, dynamic> authDetails) {
+//   return InternationalPhoneNumberInput(
+//     onInputChanged: (PhoneNumber number) {
+//       String verifyNumber = '${number.phoneNumber}';
+//
+//       authDetails[numberString] = simplifyPhoneNumber(verifyNumber);
+//     },
+//     selectorConfig: SelectorConfig(
+//       selectorType: PhoneInputSelectorType.DROPDOWN,
+//     ),
+//     ignoreBlank: false,
+//     autoValidateMode: AutovalidateMode.disabled,
+//     selectorTextStyle: const TextStyle(color: Colors.black),
+//     textFieldController: TextEditingController(),
+//     formatInput: false,
+//     keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+//     inputDecoration: InputDecoration(
+//       labelText: "Enter Phone Number",
+//       border: OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(12.0),
+//         borderSide: BorderSide(
+//           color: ShadesOfGrey.grey2,
+//           width: 2.0,
+//         ),
+//       ),
+//       enabledBorder: OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(12.0),
+//         borderSide: BorderSide(
+//           color: ShadesOfGrey.grey2, // Border color for the enabled state
+//           width: 2.0,
+//         ),
+//       ),
+//       contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0), // Adjust padding
+//     ),
+//   );
+// }
 
 Widget loginField(Map<String, dynamic> authDetails, String type){
   String text = "Enter email";
